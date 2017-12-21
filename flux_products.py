@@ -14,7 +14,6 @@ files = {'GK01G' : os.path.join(dout,'GarciaKeeling2001_seasonal_Gruber2001_ann-
          'TAK09' : os.path.join(dout,'Takahashi2009-clim-CO2_flux-4x5.nc'),
          'LGB17' : os.path.join(dout,'LandschutzerEtAl2017-clim-CO2_flux-1x1.nc')}
 
-
 src_grid = {'GK01G' : {'grid_type': '1.125x1.125','dlat': 1.125,'dlon': 1.125,
                        'left_lon_corner' : -180.},
             'GK01R' : {'grid_type': '1.125x1.125','dlat': 1.125,'dlon': 1.125,
@@ -23,6 +22,13 @@ src_grid = {'GK01G' : {'grid_type': '1.125x1.125','dlat': 1.125,'dlon': 1.125,
                        'left_lon_corner' : 0.},
             'LGB17' : {'grid_type': '1x1','dlat': 1.,'dlon': 1.,
                        'left_lon_corner' : -180.}}
+
+def files_res(key,grid='native'):
+    file_in = files[key]
+    if grid == 'native':
+        return file_in
+    else:
+        return file_in.replace('.nc','_to_'+grid+'.nc')
 
 EorW = lambda x: 'W' if x < 0 else 'E'
 lon_str = lambda lon: '%d%s'%(abs(lon),EorW(lon))
@@ -112,7 +118,8 @@ if __name__ == '__main__':
                 print('missing weight file: %s'%wgtFile)
                 exit(1)
 
-            file_out = file_in.replace('.nc','_to_'+dst.split('_')[1]+'.nc')
+            file_out = files_res(product,dst.split('_')[1])
+            
             if os.path.exists(file_out) and not clobber:
                 continue
 
