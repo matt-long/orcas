@@ -10,6 +10,8 @@ from datetime import datetime
 import xarray as xr
 import numpy as np
 
+import xcalendar as xcal
+
 hostname = socket.gethostname()
 
 #-- path additions
@@ -21,15 +23,17 @@ hostname = socket.gethostname()
 if any(s in hostname for s in ['cheyenne','yslogin','geyser','caldera']):
     scratch = '/glade/scratch/'+os.environ['USER']
     dataroot = '/glade/p/work/'+os.environ['USER']
+    dataout = '/glade/p/eol/stephens/longcoll/mclong_calcs'
 else:
     print('hostname not found')
 
 #-- directories
 calc_name = 'orcas'
 diro = {}
-diro['out'] = os.path.join(scratch,'calcs',calc_name)
+diro['work'] = os.path.join(scratch,'calcs',calc_name)
+diro['out'] = dataout
 diro['fig'] =  'fig'
-diro['log'] = './logs'
+diro['log'] = 'logs'
 
 for pth in diro.values():
     if not os.path.exists(pth):

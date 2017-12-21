@@ -3,3 +3,4 @@
 logs/*
 .DS_Store
 scratch/*
+data/.ipynb_checkpoints/*
