@@ -37,13 +37,14 @@ if __name__ == '__main__':
 #-------------------------------------------------------------------------------
 #-- run notebooks to compile fluxes at native resolution
 #-------------------------------------------------------------------------------
+
     notebook = ['gruber_etal_2001_o2_ann_flux.ipynb',
                 'resplandy_etal_2016_o2_ann_flux.ipynb',
                 'garcia_keeling_2001_o2_fluxes.ipynb',
                 'landschutzer_2017.ipynb',
                 'takahashi_2009.ipynb']
 
-    if clobber:
+    if not os.path.exists(files['GK01G']):
         for i,nb in enumerate(notebook):
             print('\n'.join(['-'*80,'[%d] running %s'%(i,nb),'-'*80]))
             out = animate_calc.exec_nb(nb)

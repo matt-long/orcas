@@ -19,16 +19,21 @@ path_tools = ['./easy']
 for p in path_tools:
     sys.path.insert(0,os.path.abspath(os.path.expanduser(p)))
 
+calc_name = 'orcas'
+
 hostname = socket.gethostname()
 if any(s in hostname for s in ['cheyenne','yslogin','geyser','caldera']):
     scratch = '/glade/scratch/'+os.environ['USER']
     dataroot = '/glade/p/work/'+os.environ['USER']
     dataout = '/glade/p/eol/stephens/longcoll/mclong_calcs'
+elif hostname == 'alpenhorn':
+    scratch = '/Users/mclong/scratch'
+    dataroot = '/Users/mclong/data'
+    dataout = os.path.join('/Users/mclong/data/calcs',calc_name)
 else:
     print('hostname not found')
 
 #-- directories
-calc_name = 'orcas'
 diro = {}
 diro['work'] = os.path.join(scratch,'calcs',calc_name)
 diro['out'] = dataout
