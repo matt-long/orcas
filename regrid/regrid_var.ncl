@@ -80,9 +80,11 @@ begin
    end if
    if (dimind .ne. non_lateral_rank) then
       print("mismatch between specified non-lateral coordinates and var rank")
+      print("var_in_dimsizes: "+var_in_dimsizes)
+      print("var_in_lateral_rank: "+var_in_lateral_rank)
+      print("non_lateral_rank: "+non_lateral_rank)
       status_exit(1)
    end if
-
    ;
    ; generate rank of outgoing var
    ;
@@ -93,8 +95,14 @@ begin
    ; generate dimension sizes of var with lateral regridding
    ; rank of var with lateral regridding is same as rank of outgoing var
    ;
+   print("var_in_dimsizes: "+var_in_dimsizes)
+   print("var_in_lateral_rank: "+var_in_lateral_rank)
+   print("non_lateral_rank: "+non_lateral_rank)
+   print("var_out_rank: "+var_out_rank)
    var_lateral_regrid_dimsizes = new(var_out_rank, integer)
-   var_lateral_regrid_dimsizes(0:non_lateral_rank-1) = var_in_dimsizes(0:non_lateral_rank-1)
+   if (non_lateral_rank .ne. 0) then
+     var_lateral_regrid_dimsizes(0:non_lateral_rank-1) = var_in_dimsizes(0:non_lateral_rank-1)
+   end if
    var_lateral_regrid_dimsizes(non_lateral_rank:var_out_rank-1) = f_wgtFile->dst_grid_dims(::-1)
    debug_print("var_lateral_regrid_dimsizes = ", var_lateral_regrid_dimsizes, opt)
 
