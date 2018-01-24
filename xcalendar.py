@@ -2,6 +2,7 @@ import numpy as np
 import calendar
 
 month_sname = [calendar.month_name[i+1][0:3] for i in range(12)]
+month_letter = [calendar.month_name[i+1][0] for i in range(12)]
 
 dpm = {'noleap': np.array([31.,28.,31.,30.,31.,30.,31.,31.,30.,31.,30.,31.]),
        '365_day': np.array([31.,28.,31.,30.,31.,30.,31.,31.,30.,31.,30.,31.]),

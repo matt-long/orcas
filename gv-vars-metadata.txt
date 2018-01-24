@@ -1,0 +1,457 @@
+Time	|	seconds since 2016-01-15 00:00:00 +0000	|	time of measurement
+A1DC_LWO	|	count	|	Fast 2DC Raw Accumulation, entire-in (per cell)
+A2DTEMP_ADS0	|	deg_C	|	A2D Temperature
+A2DTEMP_ADS1	|	deg_C	|	A2DTemperature
+A2DTEMP_L11	|	deg_C	|	A2DTemperature
+A2DTEMP_L12	|	deg_C	|	A2DTemperature
+A2DTEMP_RAD	|	deg_C	|	A2D Temperature
+ABSPEC_VXL	|	count	|	VCSEL Absorbption Spectrum
+ACDP_LWI	|	count	|	CDP Raw Accumulation (per cell)
+ACETONE_TOGA	|	pptv	|	TOGA Acetone
+ACETONITRILE_TOGA	|	pptv	|	TOGA Acetonitrile
+ACGAIN_VXL	|	count	|	VCSEL AC Gain
+ACINS	|	m/s2	|	IRS Vertical Acceleration
+ACINS_IRS2	|	m/s2	|	IRS Vertical Acceleration
+ACINS_IRS3	|	m/s2	|	IRS Vertical Acceleration
+ADIFR	|	hPa	|	Vertical Differential Pressure, Radome
+ADIFRTEMP	|	deg_C	|	Temperature of ADIFR Probe
+ALT	|	m	|	IRS Altitude
+ALT_A	|	m	|	Avionics GPS Altitude (MSL)
+ALT_A2	|	m	|	Avionics GPS Altitude (MSL)
+ALT_IRS2	|	m	|	IRS Altitude
+ALT_IRS3	|	m	|	IRS Altitude
+AO2CO2	|	ppm	|	CO2 from AO2
+AO2O2	|	per meg	|	O2 from AO2
+AO2STAT	|	flag	|	AO2 Status flag
+AT_A	|	deg_C	|	ADC Ambient Air Temperature
+AT_A2	|	deg_C	|	ADC Ambient Air Temperature
+AT_VXL	|	deg_K	|	VCSEL Ambient Temperature
+AUHSAS_RWO	|	count	|	UHSAS Raw Count Histogram
+AVGTRNS_LWI	|	microsecond	|	CDP Average Transit Time
+BALNC_DPL	|	unk	|	Dew/Frost Point Balance
+BALNC_DPR	|	unk	|	Dew/Frost Point Balance
+BALT1_A	|	m	|	ADC Baro Altitude
+BALT1_A2	|	m	|	ADC Baro Altitude
+BALT2_A	|	m	|	ADC baro corrected alt #2
+BALT2_A2	|	m	|	ADC baro corrected alt #2
+BAROCOR1_A	|	hPa	|	ADC baro correction #1 mB
+BAROCOR1_A2	|	hPa	|	ADC baro correction #1 mB
+BAROCOR2_A	|	hPa	|	ADC baro correction #2 mB
+BAROCOR2_A2	|	hPa	|	ADC baro correction #2 mB
+BDIFR	|	hPa	|	Horizontal Differential Pressure, Radome
+BDIFRTEMP	|	deg_C	|	Temperature of BDIFR Probe
+BENZENE_TOGA	|	pptv	|	TOGA Benzene
+BLATA	|	G	|	IRS Body Latitudal Acceleration
+BLATA_IRS2	|	G	|	IRS Body Latitudal Acceleration
+BLATA_IRS3	|	G	|	IRS Body Latitudal Acceleration
+BLONGA	|	G	|	IRS Body Longitudal Acceleration
+BLONGA_IRS2	|	G	|	IRS Body Longitudal Acceleration
+BLONGA_IRS3	|	G	|	IRS Body Longitudal Acceleration
+BNORMA	|	G	|	IRS Body Normal Acceleration
+BNORMA_IRS2	|	G	|	IRS Body Normal Acceleration
+BNORMA_IRS3	|	G	|	IRS Body Normal Acceleration
+BOTTLEP_AWAS	|	psia	|	AWAS Bottle Pressure
+BUTANE_TOGA	|	pptv	|	TOGA Butane
+CANNUM_AWAS	|	number	|	AWAS Can Number
+CANOPEN_AWAS	|		|	AWAS Can Open
+CAS_A	|	m/s	|	ADC Computed Air Speed
+CAS_A2	|	m/s	|	ADC Computed Air Speed
+CAVP_DPL	|	hPa	|	Dewpoint Cavity Pressure, Left
+CAVP_DPR	|	hPa	|	Dewpoint Cavity Pressure, Right
+CAVP_GNI	|	hPa	|	Dewpoint Cavity Pressure
+CAVP_NOAA	|	torr	|	Picarro Cavity Pressure
+CAVRH_GNI	|	%	|	Cavity Relative Humidity
+CAVT_GNI	|	deg_C	|	Cavity Temperature
+CAVT_NOAA	|	deg_C	|	Picarro Cavity Temperature
+CDP5VMON_LWI	|	Vdc	|	CDP 5 Vdc Monitor
+CDPCBTMP_LWI	|	deg_C	|	CDP Control Board Temperature
+CDPLBTMP_LWI	|	deg_C	|	CDP Laser Block Temperature
+CDPLSRC_LWI	|	mAmp	|	CDP Laser Current
+CDPLSRP_LWI	|	V	|	CDP Laser Power Monitor
+CDPQBDW_LWI	|	unk	|	CDP Qualifier DT Bandwidth
+CDPQBLINE_LWI	|	Vdc	|	CDP Qualifier Baseline
+CDPQTHRSH_LWI	|	unk	|	CDP Qualifier Dynamic Threshold
+CDPSBDW_LWI	|	unk	|	CDP Sizer DT Bandwidth
+CDPSBLINE_LWI	|	Vdc	|	CDP Sizer Baseline
+CDPSTHRSH_LWI	|	unk	|	CDP Sizer Dynamic Threshold
+CDPWBTMP_LWI	|	deg_C	|	CDP Wing Board Temperature
+CH2BR2_TOGA	|	pptv	|	TOGA CH2Br2
+CH2CL2_TOGA	|	pptv	|	TOGA CH2Cl2
+CH3OH_TOGA	|	pptv	|	TOGA CH3OH
+CH4DRY_NOAA	|	ppb	|	Picarro Methane Mixing Ratio, Dry
+CH4_NOAA	|	ppb	|	Picarro Methane Mixing Ratio
+CH4_QCLS	|	ppb	|	Methane
+CHAN1_MED	|	torr	|	MEDUSA Channel 1
+CHAN2_MED	|	torr	|	MEDUSA Channel 2
+CHAN3_MED	|	torr	|	MEDUSA Channel 3
+CHAN4_MED	|	sccm	|	MEDUSA Channel 4
+CHAN5_MED	|	ppm	|	MEDUSA Channel 5
+CHAN6_MED	|	V	|	MEDUSA Channel 6
+CHAN7_MED	|	V	|	MEDUSA Channel 7
+CNTEMP	|	deg_C	|	BCN Counter Inlet Temperature
+CNTRCUR_VXL	|	count	|	VCSEL Center Current
+CNTS	|	count	|	TSI CN Counter Output
+CO2DRY_NOAA	|	ppm	|	Picarro Carbon Dioxide Mixing Ratio, Dry
+CO2_NOAA	|	ppm	|	Picarro Carbon Dioxide Mixing Ratio
+CO2_QCLS	|	ppb	|	Carbon Dioxide
+CO_NOAA	|	ppm	|	Picarro Carbon Monoxide Mixing Ratio
+CO_QCLS	|	ppb	|	Carbon Monoxide
+DAST_NOAA	|	deg_C	|	Picarro Das Temperature
+DATE_NOAA	|	yymmdd	|	Picarro Date
+DELTAT_LWI	|	msec	|	CDP Time between last sample and this sample
+DMS_TOGA	|	pptv	|	TOGA Dimethyl Sulfide
+DRFTA	|	degree	|	IRS Drift Angle
+DRFTA_IRS2	|	degree	|	IRS Drift Angle
+DRFTA_IRS3	|	degree	|	IRS Drift Angle
+DT1DC_LWO	|	msec	|	Fast 2DC Probe Dead Time
+EPOCH_NOAA	|	seconds	|	Picarro Epoch Time
+ETALONT_NOAA	|	deg_C	|	Picarro Etalon Temperature
+ETHANOL_TOGA	|	pptv	|	TOGA Ethanol
+F2DIO1_LWO	|	V	|	Fast 2DC End Diode Voltage #1
+F2DIO32_LWO	|	V	|	Fast 2DC End Diode Voltage #32
+F2DIO64_LWO	|	V	|	Fast 2DC End Diode Voltage #64
+FCN	|	vlpm	|	Raw BCN Counter Sample Flow Rate
+FLOW_AWAS	|	slpm	|	AWAS Flow
+FLOW_NOAA	|	sccm	|	Picarro Flow
+GGALT	|	m	|	Reference GPS Altitude (MSL)
+GGALTSD	|	m	|	Standard Deviation of Reference GPS Altitude (MSL)
+GGDAGE	|	s	|	Time in seconds since last DGPS update
+GGEOIDHT	|	m	|	Reference GPS Height of geoid (MSL) above WGS84 ellipsoid
+GGHORDIL	|	none	|	Reference GPS Horizontal dilution of position
+GGLAT	|	degree_N	|	Reference GPS Latitude
+GGLATSD	|	m	|	Standard Deviation of Reference GPS Latitude
+GGLON	|	degree_E	|	Reference GPS Longitude
+GGLONSD	|	m	|	Standard Deviation of Reference GPS Longitude
+GGNSAT	|	number	|	Reference GPS number of satellites used in solution
+GGQUAL	|	none	|	Reference GPS Qual, 0=inval,1=GPS,2=DGPS,5=OMNISTAR
+GGREFID	|	none	|	DGPS station ID number
+GGRepLag	|	s	|	GPS reporting lag: (data sys time tag of NMEA receipt)-(NMEA time)
+GGSPD	|	m/s	|	Reference GPS Ground Speed
+GGSTATUS	|	none	|	Reference GPS rcvr status: 1=OK(A), 0=warning(V)
+GGTRK	|	degree_T	|	Reference GPS Track Angle
+GGVEW	|	m/s	|	Reference GPS Ground Speed Vector, East Component
+GGVNS	|	m/s	|	Reference GPS Ground Speed Vector, North Component
+GGVSPD	|	m/s	|	Reference GPS Vertical Speed
+GSPD	|	m/s	|	IRS Aircraft Ground Speed
+GSPD_A	|	m/s	|	Avionics GPS Ground Speed
+GSPD_A2	|	m/s	|	Avionics GPS Ground Speed
+GSPD_IRS2	|	m/s	|	IRS Aircraft Ground Speed
+GSPD_IRS3	|	m/s	|	IRS Aircraft Ground Speed
+GSTAT_A	|	none	|	Avionics GPS Sensor Status
+GSTAT_A2	|	none	|	Avionics GPS Sensor Status
+GTIME_A	|	s	|	Avionics GPS UTC Measure Time
+GTIME_A2	|	s	|	Avionics GPS UTC Measure Time
+GVEW_A	|	m/s	|	Avionics GPS Ground Speed Vector, East Component
+GVEW_A2	|	m/s	|	Avionics GPS Ground Speed Vector, East Component
+GVNS_A	|	m/s	|	Avionics GPS Ground Speed Vector, North Component
+GVNS_A2	|	m/s	|	Avionics GPS Ground Speed Vector, North Component
+H2OB_NOAA	|	%	|	Picarro H2O B Mixing Ratio
+H2ORAW_NOAA	|	%	|	Picarro H2O Raw Mixing Ratio
+H2O_NOAA	|	%	|	Picarro H2O Mixing Ratio
+HCHO_TOGA	|	pptv	|	TOGA HCHO
+INTRVL_AWAS	|	sec	|	AWAS Sample Interval
+INVLV_NOAA	|		|	Picarro Inlet Valve
+IRIG_Status_303	|	bits	|	IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC
+IRIG_Status_304	|	bits	|	IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC
+IRIG_Status_305	|	bits	|	IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC
+IRIG_Status_310	|	bits	|	IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC
+IRIG_Status_LWO	|	bits	|	IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC
+IRIG_Status_RWO	|	bits	|	IRIG status: bit 0=SYNC,1=NOCODE,2=NOPPS,3=NOMAJT,4=NOYEAR,5=NOSYNC
+IRIG_Tdiff_303	|	sec	|	IRIG-UNIX clock diff
+IRIG_Tdiff_304	|	sec	|	IRIG-UNIX clock diff
+IRIG_Tdiff_305	|	sec	|	IRIG-UNIX clock diff
+IRIG_Tdiff_310	|	sec	|	IRIG-UNIX clock diff
+IRIG_Tdiff_LWO	|	sec	|	IRIG-UNIX clock diff
+IRIG_Tdiff_RWO	|	sec	|	IRIG-UNIX clock diff
+IWD	|	degree_T	|	IRS Wind Direction
+IWD_IRS2	|	degree_T	|	IRS Wind Direction
+IWD_IRS3	|	degree_T	|	IRS Wind Direction
+IWS	|	m/s	|	IRS Wind Speed
+IWS_IRS2	|	m/s	|	IRS Wind Speed
+IWS_IRS3	|	m/s	|	IRS Wind Speed
+LAT	|	degree_N	|	IRS Latitude
+LATF_A	|	degree_N	|	Avionics GPS Latitude Fine
+LATF_A2	|	degree_N	|	Avionics GPS Latitude Fine
+LAT_A	|	degree_N	|	Avionics GPS Latitude
+LAT_A2	|	degree_N	|	Avionics GPS Latitude
+LAT_IRS2	|	degree_N	|	IRS Latitude
+LAT_IRS3	|	degree_N	|	IRS Latitude
+LON	|	degree_E	|	IRS Longitude
+LONF_A	|	degree_E	|	Avionics GPS Longitude Fine
+LONF_A2	|	degree_E	|	Avionics GPS Longitude Fine
+LON_A	|	degree_E	|	Avionics GPS Longitude
+LON_A2	|	degree_E	|	Avionics GPS Longitude
+LON_IRS2	|	degree_E	|	IRS Longitude
+LON_IRS3	|	degree_E	|	IRS Longitude
+LSRINT_VXL	|	count	|	VCSEL Averaged Laser Intensity
+LSRTMP_VXL	|	ohm	|	VCSEL Laser Temperature
+MACH_A	|	none	|	ADC Mach Number
+MACH_A2	|	none	|	ADC Mach Number
+MANP_AWAS	|	psia	|	AWAS Manifold Pressure
+MAXP_AWAS	|	psia	|	AWAS Maximum Sample Pressure
+MAXT_AWAS	|	sec	|	AWAS Maximum Sample Time
+MEDCO2	|	ppmv	|	Medusa CO2
+MEDFLOW	|	V	|	Medusa Flow
+MEDH2O	|	ppmv	|	Medusa H2O
+MEDP1	|	torr	|	Medusa Presure 1
+MEDP2	|	torr	|	Medusa Presure 2
+MEDPBYP	|	torr	|	Medusa Presure Bypass
+MEDPSA	|	torr	|	Medusa Sample Pressure
+MEDSTAT1	|	flag	|	Medusa Status
+MEDSTAT2	|	flag	|	Medusa Status
+MEDSTAT3	|	flag	|	Medusa Status
+MEK_TOGA	|	pptv	|	TOGA Methyl Ethyl Ketone
+MHDG	|	deg	|	IRS Aircraft Magnetic Heading Angle
+MHDG_IRS2	|	deg	|	IRS Aircraft Magnetic Heading Angle
+MHDG_IRS3	|	deg	|	IRS Aircraft Magnetic Heading Angle
+MIRRTMP_DPL	|	deg_C	|	Raw Dew/Frost Point Temperature
+MIRRTMP_DPR	|	deg_C	|	Raw Dew/Frost Point Temperature
+MODE_VXL	|	none	|	VCSEL Mode
+MPVPOS_NOAA	|		|	Picarro MPV Position
+N2O_QCLS	|	ppb	|	Nitrous Oxide
+NOSETMP	|	deg_C	|	Radome Environmental Box Temperature
+OFFSET_AWAS	|		|	AWAS Offset
+OUTVLV_NOAA	|		|	Picarro Outlet Valve
+OVFLW_LWI	|	count	|	CDP AtoD Converter Overflow/Overrange
+PALT_A	|	m	|	ADC Pressure Altitude
+PALT_A2	|	m	|	ADC Pressure Altitude
+PCAB	|	hPa	|	Interior Cabin Static Pressure
+PCN	|	hPa	|	BCN Counter Inlet Pressure
+PDUMPPL	|	hPa	|	Pressure of instrument exhaust duct, left
+PDUMPPR	|	hPa	|	Pressure of instrument exhaust duct, right
+PEAK14_NOAA	|		|	Picarro Peak 14
+PEAK84_NOAA	|		|	Picarro Peak 84, Raw
+PITCH	|	degree	|	IRS Aircraft Pitch Angle
+PITCH_IRS2	|	degree	|	IRS Aircraft Pitch Angle
+PITCH_IRS3	|	degree	|	IRS Aircraft Pitch Angle
+PKPOS_VXL	|	count	|	VCSEL Peak Position
+PLWC	|	V	|	Raw PMS-King Liquid Water Content Output
+PNEUP_AWAS	|	psia	|	AWAS Pneumatic Pressure
+PREGAIN_VXL	|	count	|	VCSEL Pre Gain
+PRESS_CLH	|	hPa	|	CU Total Water Cell Pressure
+PSF	|	hPa	|	Raw Static Pressure, Fuselage
+PS_A	|	hPa	|	ADC Static Pressure
+PS_A2	|	hPa	|	ADC Static Pressure
+PS_NOAA	|	torr	|	Picarro Ambient Pressure
+PS_VXL	|	hPa	|	VCSEL Ambient Pressure
+PT_A	|	hPa	|	ADC Total Pressure
+PT_A2	|	hPa	|	ADC Total Pressure
+PUMPON_AWAS	|		|	AWAS Pump On
+QCF	|	hPa	|	Raw Dynamic Pressure, Fuselage
+QCFTEMP	|	deg_C	|	Temperature of QCF Probe
+QCR	|	hPa	|	Raw Dynamic Pressure, Radome
+QCRTEMP	|	deg_C	|	Temperature of QCR Probe
+QC_A	|	hPa	|	ADC Impact Pressure
+QC_A2	|	hPa	|	ADC Impact Pressure
+RAWCONC_VXL	|	#/cm3	|	VCSEL Moisture Number Density
+REJDOF_LWI	|	count	|	CDP Rejected Particle Count (Outside Depth-of-Field)
+RENDPT_CLH	|	V	|	CU Total Water Maximum Detector Voltage
+RICE	|	V	|	Raw Icing-Rate Indicator
+ROLL	|	degree	|	IRS Aircraft Roll Angle
+ROLL_IRS2	|	degree	|	IRS Aircraft Roll Angle
+ROLL_IRS3	|	degree	|	IRS Aircraft Roll Angle
+RPS_LWO	|	count	|	Fast 2DC Records per Second
+RSTB	|	deg_C	|	Radiometric Surface Temperature
+RTF1	|	deg_C	|	Recovery Air Temperature, Unheated
+RTH1	|	deg_C	|	Recovery Air Temperature, Deiced Right, HARCO
+RTH2	|	deg_C	|	Recovery Air Temperature, Deiced Right, HARCO
+RT_A	|	deg_C	|	ADC Recovery Air Temperature
+RT_A2	|	deg_C	|	ADC Recovery Air Temperature
+SAMPNW_AWAS	|		|	AWAS Sample Now
+SECOPN_AWAS	|	sec	|	AWAS Seconds Open
+SETTMP_VXL	|	ohm	|	VCSEL Set Temperature
+SHDORC_LWO	|	count	|	Fast 2DC Shadow OR Count
+SLOPE_AWAS	|		|	AWAS Slope
+SMPLSRINT_VXL	|	mV	|	VCSEL Sample Laser Intensity
+SPECIES_NOAA	|		|	Picarro Species
+START_AWAS	|		|	AWAS Start Sequence
+STATUS_VXL	|	none	|	VCSEL Status Code
+TAS_A	|	m/s	|	ADC True Air Speed
+TAS_A2	|	m/s	|	ADC True Air Speed
+TCAB	|	deg_C	|	Cabin Temperature at ADS Rack Location
+TCC_VXL	|	count	|	VCSEL Thermoelectric Cooler Current
+TEC_DPL	|	unk	|	Dew/Frost Point TEC
+TEC_DPR	|	unk	|	Dew/Frost Point TEC
+TEMP_CLH	|	deg_C	|	CU Total Water Cell Temperature
+THDG	|	degree_T	|	IRS Aircraft True Heading Angle
+THDG_IRS2	|	degree_T	|	IRS Aircraft True Heading Angle
+THDG_IRS3	|	degree_T	|	IRS Aircraft True Heading Angle
+TIME_NOAA	|	hhmmss	|	Picarro Time
+TKAT	|	degree_T	|	IRS Aircraft Track Angle
+TKAT_A	|	degree_T	|	Avionics GPS Track Angle
+TKAT_A2	|	degree_T	|	Avionics GPS Track Angle
+TKAT_IRS2	|	degree_T	|	IRS Aircraft Track Angle
+TKAT_IRS3	|	degree_T	|	IRS Aircraft Track Angle
+TOLUENE_TOGA	|	pptv	|	TOGA Toluene
+TRSTB	|	deg_C	|	RSTB Sensor Heater Unit Setting
+UBTMP_RWO	|	K	|	UHSAS Temperature in Canister
+UCURR_RWO	|	V	|	UHSAS Laser Current
+UDIFF_RWO	|	V	|	UHSAS Absolute Pressure in Canister, signal
+UPRESS_RWO	|	kPa	|	UHSAS Absolute Pressure in Canister
+UREF_RWO	|	V	|	UHSAS Reference Intensity
+USCAT_RWO	|	V	|	UHSAS Background Scatter
+USHFLW_RWO	|	vccs	|	UHSAS Air Sheath Flow
+USMPFLW_RWO	|	vccs	|	UHSAS Sample Flow
+UTEMP_RWO	|	V	|	UHSAS Temperature in Canister, signal
+VEW	|	m/s	|	IRS Ground Speed Vector, East Component
+VEW_IRS2	|	m/s	|	IRS Ground Speed Vector, East Component
+VEW_IRS3	|	m/s	|	IRS Ground Speed Vector, East Component
+VMR_CLH	|	ppmv	|	CU Total Water Uncorrected VMR
+VNS	|	m/s	|	IRS Ground Speed Vector, North Component
+VNS_IRS2	|	m/s	|	IRS Ground Speed Vector, North Component
+VNS_IRS3	|	m/s	|	IRS Ground Speed Vector, North Component
+VSPD	|	m/s	|	IRS Vertical Speed
+VSPD_A	|	m/s	|	Avionics GPS Vertical Velocity
+VSPD_A2	|	m/s	|	Avionics GPS Vertical Velocity
+VSPD_IRS2	|	m/s	|	IRS Vertical Speed
+VSPD_IRS3	|	m/s	|	IRS Vertical Speed
+WAITNXT_AWAS	|	sec	|	AWAS Wait For Next
+WBOXT_NOAA	|	deg_C	|	Picarro Warm Box Temperature
+WOW_A	|		|	ADS Weight On Wheels
+WOW_A2	|		|	ADS Weight On Wheels
+XICN	|	vlpm	|	BCN Isokinetic Side Flow Rate
+XVOPEN_AWAS	|		|	AWAS XV Open
+AKRD	|	degree	|	Attack Angle, Radome Diff. Pressure
+AQRATIO	|		|	Al's Fudge Factor
+ATF1	|	deg_C	|	Ambient Temperature, Unheated
+ATH1	|	deg_C	|	Ambient Temperature, Deiced Left
+ATH2	|	deg_C	|	Ambient Temperature, Deiced Left
+ATTACK	|	degree	|	Attack Angle, Reference
+ATX	|	deg_C	|	Ambient Temperature, Reference
+C1DC_LWO	|	#/L	|	2D-C Concentration, 260X Emulation (per cell)
+CCDP_LWI	|	#/cm3	|	CDP Concentration (per cell)
+COCAL_NOAA	|	ppbv	|	Corrected Carbon Monoxide Concentration
+COCAL_QCLS	|	ppbv	|	Corrected Carbon Monoxide Concentration
+COCOR_NOAA	|	V	|	Raw Carbon Monoxide, Baseline Corrected
+COCOR_QCLS	|	V	|	Raw Carbon Monoxide, Baseline Corrected
+CONC1DC100_LWO	|	#/L	|	2D-C Concentration 100u and larger, Center-in (all cells)
+CONC1DC150_LWO	|	#/L	|	2D-C Concentration 150u and larger, Center-in (all cells)
+CONC1DC_LWO	|	#/L	|	2D-C Concentration, 260X Emulation (all cells)
+CONCD_LWI	|	#/cm3	|	CDP Concentration (all cells)
+CONCN	|	#/cm3	|	Condensation Nuclei (CN) Concentration
+CONCU100_RWO	|	#/cm3	|	UHSAS Concentration, .1 micron and bigger
+CONCU500_RWO	|	#/cm3	|	UHSAS Concentration, .5 micron and bigger
+CONCU_RWO	|	#/cm3	|	UHSAS Concentration (all cells)
+CONCV_VXL	|	#/cm3	|	VCSEL Moisture Number Density
+COZRO_NOAA	|	V	|	Carbon Monoxide Baseline Zero Signal
+COZRO_QCLS	|	V	|	Carbon Monoxide Baseline Zero Signal
+CUHSAS_RWO	|	#/cm3	|	UHSAS Concentration (per cell)
+DBAR1DC_LWO	|	um	|	2D-C Mean Particle Diameter, 260X Emulation
+DBARD_LWI	|	um	|	CDP Mean Particle Diameter
+DBARU_RWO	|	um	|	UHSAS Mean Particle Diameter
+DBZ1DC_LWO	|	dBZ	|	2D-C Calculated Reflectivity, 260X Emulation
+DBZD_LWI	|	dBZ	|	CDP Calculated Reflectivity
+DISP1DC_LWO	|	none	|	2D-C Dispersion, 260X Emulation (sigma/dbarx)
+DISPD_LWI	|	none	|	CDP Dispersion (sigma/dbarx)
+DISPU_RWO	|	none	|	UHSAS Dispersion (sigma/dbarx)
+DPXC	|	deg_C	|	Dew/Frost Point Temperature, Reference
+DP_DPL	|	deg_C	|	Dew/Frost Point Temperature
+DP_DPR	|	deg_C	|	Dew/Frost Point Temperature
+DP_VXL	|	deg_C	|	Dew/Frost Point Temperature
+DVALUE	|	m	|	D-VALUE (GGALT - PALT)
+EWX	|	hPa	|	Ambient Water Vapor Pressure, Reference
+EW_DPL	|	hPa	|	Ambient Water Vapor Pressure
+EW_DPR	|	hPa	|	Ambient Water Vapor Pressure
+EW_VXL	|	hPa	|	Ambient Water Vapor Pressure (VCSEL)
+FCNC	|	vlpm	|	Corrected BCN Counter Sample Flow Rate
+LATC	|	degree_N	|	GPS-Corrected Inertial Latitude
+LONC	|	degree_E	|	GPS-Corrected Inertial Longitude
+MACHF	|	none	|	Aircraft Mach Number, Fuselage
+MACHR	|	none	|	Aircraft Mach Number, Radome
+MACHX	|	none	|	Aircraft Mach Number, Reference
+MR	|	gram/kg	|	Mixing Ratio, T-Electric
+ONE	|	none	|	Constant value of 1.
+PALT	|	m	|	NACA Pressure Altitude
+PALTF	|	feet	|	NACA Pressure Altitude
+PDRY	|	W	|	Power Dry Calculated
+PLWC1DC_LWO	|	gram/m3	|	2D-C Water/Ice Content, 260X Emulation
+PLWCC	|	gram/m3	|	Corrected PMS-King Liquid Water Content
+PLWCD_LWI	|	gram/m3	|	CDP Water/Ice Content
+PSFC	|	hPa	|	Corrected Static Pressure, Fuselage
+PSX	|	hPa	|	Raw Static Pressure, Reference
+PSXC	|	hPa	|	Corrected Static Pressure, Reference
+PVOLU_RWO	|	um3/m3	|	UHSAS Equivalent Volume
+QCFC	|	hPa	|	Corrected Dynamic Pressure, Fuselage
+QCRC	|	hPa	|	Corrected Dynamic Pressure, Radome
+QCX	|	hPa	|	Raw Dynamic Pressure, Reference
+QCXC	|	hPa	|	Corrected Dynamic Pressure, Reference
+REFF2DC_LWO	|	um	|	1DC Effective Radius
+REFFD_LWI	|	um	|	CDP Effective Radius
+RHODT	|	gram/m3	|	Absolute Humidity, T-Electric
+RHUM	|	%	|	Relative Humidity
+RTX	|	deg_C	|	Recovery Temperature, Reference
+SOLAZ	|	radian	|	Solar Azimuth Angle
+SOLDE	|	radian	|	Solar Declination Angle
+SOLEL	|	radian	|	Solar Elevation Angle
+SOLZE	|	radian	|	Solar Zenith Angle
+SSLIP	|	degree	|	Sideslip Angle, Reference
+SSRD	|	degree	|	Sideslip Angle, Radome Diff. Pressure
+TASDRY	|	m/s	|	Aircraft True Airpseed, Dry Air
+TASF	|	m/s	|	Aircraft True Airspeed, Fuselage
+TASFLG	|	bool	|	True Airpseed Humidity Correction Flag
+TASR	|	m/s	|	Aircraft True Airspeed, Radome
+TASX	|	m/s	|	Aircraft True Airspeed, Reference
+TCNTD_LWI	|	count	|	CDP Total Counts (all cells)
+TCNTU_RWO	|	count	|	UHSAS Total Counts (all cells)
+THETA	|	K	|	Potential Temperature
+THETAE	|	K	|	Equivalent Potential Temperature
+THETAP	|	K	|	Pseudo-adiabatic Equivalent Potential Temperature
+THETAQ	|	K	|	Wet Equivalent Potential Temperature
+THETAV	|	K	|	Virtual Potential Temperature
+TVIR	|	deg_C	|	Virtual Temperature
+UFLWC_RWO	|	vol cm3/s	|	UHSAS Corrected Flow
+UI	|	m/s	|	Wind Vector, East Component
+UIC	|	m/s	|	GPS-Corrected Wind Vector, East Component
+UX	|	m/s	|	Wind Vector, Longitudinal Component
+UXC	|	m/s	|	GPS-Corrected Wind Vector, Longitudinal Component
+VEWC	|	m/s	|	GPS-Corrected Inertial Ground Speed Vector, East Component
+VI	|	m/s	|	Wind Vector, North Component
+VIC	|	m/s	|	GPS-Corrected Wind Vector, North Component
+VMR_VXL	|	ppmv	|	Volume Mixing Ratio
+VNSC	|	m/s	|	GPS-Corrected Inertial Ground Speed Vector, North Component
+VY	|	m/s	|	Wind Vector, Lateral Component
+VYC	|	m/s	|	GPS-Corrected Wind Vector, Lateral Component
+WD	|	degree_T	|	Horizontal Wind Direction
+WDC	|	degree_T	|	GPS-Corrected Horizontal Wind Direction
+WI	|	m/s	|	Wind Vector, Vertical Gust Component
+WIC	|	m/s	|	GPS-Corrected Wind Vector, Vertical Gust Component
+WS	|	m/s	|	Horizontal Wind Speed
+WSC	|	m/s	|	GPS-Corrected Horizontal Wind Speed
+XICNC	|	vlpm	|	Corrected CN Isokinetic Side Flow Rate
+ZERO	|	none	|	Constant value of 0.
+interarrival_endpoints	|		|	
+A2DCA_LWO	|	count	|	Fast 2DC Corrected Accumulation per Channel, All Particles
+A2DCR_LWO	|	count	|	Fast 2DC Corrected Accumulation per Channel, Round Particles
+I2DCA_LWO	|	count	|	Interarrival Time Accumulation, All Particles Including Rejectio
+C2DCA_LWO	|	#/L	|	Fast 2DC Concentration per Channel, All Particles
+C2DCR_LWO	|	#/L	|	Fast 2DC Concentration per Channel, Round Particles
+CONC2DCA_LWO	|	#/L	|	Total Fast 2DC Concentration, All Particles
+CONC2DCR_LWO	|	#/L	|	Total Fast 2DC Concentration, Round Particles
+PLWC2DCR_LWO	|	gram/m3	|	Fast 2DC Liquid Water Content, Round Particles
+PLWC2DCA_LWO	|	gram/m3	|	Fast 2DC Liquid Water Content, All Particles
+DBAR2DCR_LWO	|	um	|	Fast 2DC Mean Particle Diameter, Round Particles
+DBAR2DCA_LWO	|	um	|	Fast 2DC Mean Particle Diameter, All Particles
+DISP2DCR_LWO	|	none	|	Fast 2DC Dispersion, Round Particles
+DISP2DCA_LWO	|	none	|	Fast 2DC Dispersion, All Particles
+DBZ2DCR_LWO	|	dBZ	|	Fast 2DC Calculated Reflectivity, Round Particles
+DBZ2DCA_LWO	|	dBZ	|	Fast 2DC Calculated Reflectivity, All Particles
+REFF2DCR_LWO	|	um	|	Fast 2DC Effective Radius, Round Particles
+REFF2DCA_LWO	|	um	|	Fast 2DC Effective Radius, All Particles
+NACCEPT2DCR_LWO	|	count	|	Number of Fast 2DC Particles Accepted, Round Particles
+NACCEPT2DCA_LWO	|	count	|	Number of Fast 2DC Particles Accepted, All Particles
+NREJECT2DCR_LWO	|	count	|	Number of Fast 2DC Particles Rejected, Round Particles
+NREJECT2DCA_LWO	|	count	|	Number of Fast 2DC Particles Rejected, All Particles
+Time	|	seconds since 2016-01-15 00:00:00 +0000	|	time of measurement
+GGALT	|	m	|	Reference GPS Altitude (MSL)
+LATC	|	degree_N	|	GPS-Corrected Inertial Latitude
+LONC	|	degree_E	|	GPS-Corrected Inertial Longitude
+O2_OCN_FMPD	|	per meg	|	O2_OCN
+CO2_OCN_FMPD	|	ppm	|	CO2_OCN
+CO2_LND_FMPD	|	ppm	|	CO2_LND
+CO2_FFF_FMPD	|	ppm	|	CO2_FFF
+CO2_FMPD	|	ppm	|	CO2
+theta_atm_FMPD	|	K	|	Potential temperature
+PBLH_FMPD	|	m	|	PBL height
+ocean_air_FMPD	|	ppm	|	Ocean air
+socn_air_FMPD	|	ppm	|	Southern Ocean air
+IDL_T000_FMPD	|	ppm	|	IDL_T000 concentration

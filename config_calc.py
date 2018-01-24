@@ -22,7 +22,7 @@ for p in path_tools:
 calc_name = 'orcas'
 
 hostname = socket.gethostname()
-if any(s in hostname for s in ['cheyenne','yslogin','geyser','caldera']):
+if any(s in hostname for s in ['cheyenne','yslogin','geyser','caldera','pronghorn']):
     scratch = '/glade/scratch/'+os.environ['USER']
     dataroot = '/glade/p/work/'+os.environ['USER']
     dataout = '/glade/p/eol/stephens/longcoll/mclong_calcs'

@@ -9,6 +9,19 @@ begin
       opt@URCorner = (/  90.0-0.5*dlat, 360.0+left_lon_corner-0.5*dlon /)
       latlon_to_SCRIP(grid_out_fname, grid_type, opt)
 
+      f = addfile(grid_out_fname,"w")
+      nx = 360/dlon
+      ny = 180/dlat
+      lat = fspan(opt@LLCorner(0),opt@URCorner(0),toint(ny))
+      lon = fspan(opt@LLCorner(1),opt@URCorner(1),toint(nx))
+
+      lat!0 = "lat"
+      lon!0 = "lon"
+      lat&lat = lat
+      lon&lon = lon
+      f->lat = lat
+      f->lon = lon
+
   else if task .eq. "gen_rectilinear_grid_file"
       opt = True
       opt@ForceOverwrite = True
@@ -17,7 +30,16 @@ begin
       f = addfile(latlon_file,"r")
       lat = f->lat
       lon = f->lon
+
+      lat!0 = "lat"
+      lon!0 = "lon"
+      lat&lat = lat
+      lon&lon = lon
+
       rectilinear_to_SCRIP(grid_out_fname, lat, lon, opt)
+      f = addfile(grid_out_fname,"w")
+      f->lat = lat
+      f->lon = lon
 
   else if task .eq. "gen_weight_file"
       opt = True

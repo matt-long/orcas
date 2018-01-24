@@ -250,6 +250,10 @@ begin
      var_out!(var_out_rank-1) = "lon"
    end if
 
+   if (dst_grid_type .eq. "latlon") then
+     var_out!(var_out_rank-2) = "lat"
+     var_out!(var_out_rank-1) = "lon"
+   end if
    ;
    ; create output file
    ;
@@ -265,6 +269,10 @@ begin
       ; add dst_grid specific grid info
       if (dst_grid_type .eq. "POP") then
          append_POP_grid_vars(f_out, f_wgtFile@grid_file_dst)
+      end if
+
+      if (dst_grid_type .eq. "rectilinear") .or. (dst_grid_type .eq. "latlon") then
+        append_rectilinear_or_latlon_grid_vars(f_out,f_wgtFile@grid_file_dst)
       end if
 
    end if

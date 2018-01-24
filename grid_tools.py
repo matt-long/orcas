@@ -18,7 +18,7 @@ def compute_grid_area(longitude,latitude):
     dx = dx[0]
 
     dy = np.diff(latitude)
-    if not (dy == dy[0]).all():
+    if not np.allclose(dy,dy[0]):
         print('dy not constant')
         exit(1)
     dy = dy[0]

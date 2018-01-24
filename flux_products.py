@@ -1,9 +1,6 @@
 #! /usr/bin/env python
 from config_calc import *
 
-droot = os.path.join(dataroot,'pco2-ldeo')
-ds = xr.open_dataset(os.path.join(droot,'ldeo_monthly_clim_v2009_c20150807.nc'))
-
 dout = os.path.join(diro['out'],'flux_products')
 
 if not os.path.exists(dout):
@@ -71,12 +68,29 @@ if __name__ == '__main__':
             d.update({'grid_out_fname' : fname})
             ok = regrid.gen_latlon_grid_file(**d)
 
+#-------------------------------------------------------------------------------
+#-- remap to destination grid_file
+#-------------------------------------------------------------------------------
+    rectilinear_grids = [{'grid_name': 'T62',
+                          'latlon_file' : '/glade/p/cesm/cseg/inputdata/atm/datm7/NYF/nyf.ncep.T62.050923.nc'},
+                          {'grid_name': 'f09',
+                          'latlon_file' : '/glade/p/work/mclong/grids/f09_f09.nc'}]
+
+    print('-'*40)
+    print('generating rectilinear grids')
+    for d in rectilinear_grids:
+        grid = '_'.join(['rectilinear',d['grid_name']])
+        fname = regrid.grid_file(grid)
+        if not os.path.exists(fname) or clobber:
+            print('grid_name = %s'%grid)
+            d.update({'grid_out_fname' : fname})
+            ok = regrid.gen_rectilinear_grid_file(**d)
 
 #-------------------------------------------------------------------------------
 #-- remap to destination grid_file
 #-------------------------------------------------------------------------------
 
-    dst_grids = ['rectilinear_f09','POP_gx1v6']
+    dst_grids = ['latlon_1x1_180W','rectilinear_f09','POP_gx1v6']
 
     interp_method = 'conserve'
     prefill_opt = 'zeros'
@@ -119,7 +133,7 @@ if __name__ == '__main__':
                 exit(1)
 
             file_out = files_res(product,dst.split('_')[1])
-            
+
             if os.path.exists(file_out) and not clobber:
                 continue
 

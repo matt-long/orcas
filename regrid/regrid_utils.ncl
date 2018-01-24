@@ -56,7 +56,7 @@ begin
    ;
    mismatch = False
    print("dims yc_var: "+dimsizes(yc_var))
-   print("dims yc_a: "+dimsizes(yc_a)) 
+   print("dims yc_a: "+dimsizes(yc_a))
    if (any(abs(yc_var - yc_a) .gt. 1e-5)) then
       print("yc_a mismatch for "+varname)
       print("src_grid = "+opt@src_grid)
@@ -141,4 +141,16 @@ begin
    REGION_MASK@coordinates = "TLONG TLAT"
    REGION_MASK@long_name = "basin index number"
    f_out->REGION_MASK = REGION_MASK
+end
+
+;
+; append POP specific grid vars to a file
+;
+undef("append_rectilinear_or_latlon_grid_vars")
+procedure append_rectilinear_or_latlon_grid_vars(f_out:file, grid_file:string)
+local f_grid_file,lat,lon
+begin
+   f_grid_file = addfile(grid_file, "r")
+   f_out->lat = f_grid_file->lat
+   f_out->lon = f_grid_file->lon
 end
