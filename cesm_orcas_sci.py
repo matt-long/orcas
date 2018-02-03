@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 import os
-import xarray as xr
+from subprocess import call
 
 #------------------------------------------------------------
 #--- constants
@@ -291,13 +291,26 @@ def trace_gas_tracers(case):
 #-- function
 #-------------------------------------------------------------------------------
 
-def open_casedata(case,component,stream,variables):
+def open_casedata(case,component,stream,variables,
+                  transformed=''):
+
+    import xarray as xr
 
     case_def = case_definitions[case]
+    subdir = 'proc/tseries/daily'
+
+    if transformed:
+        subdir = subdir+'_'+transformed
+
     ds = {}
     for v in variables:
-        f = os.path.join(case_def['droot'],component,'proc/tseries/daily','.'.join([case,stream,v,case_def['datestr'],'nc']))
-        ds = xr.merge((ds,xr.open_dataset(f,drop_variables='time_written')))
+        f = os.path.join(case_def['droot'],component,subdir,'.'.join([case,stream,v,case_def['datestr'],'nc']))
+        ds = xr.merge((ds,xr.open_dataset(f,drop_variables=['time_written',
+                                                            'date_written',
+                                                            'date','datesec',
+                                                            'mdt','nbsec','nsbase',
+                                                            'nsteph','ntrk','ntrm',
+                                                            'ntrn'])))
 
     return ds
 
@@ -305,23 +318,104 @@ def open_casedata(case,component,stream,variables):
 #-- function
 #-------------------------------------------------------------------------------
 
-def convert_dataset(ds,case):    
+def convert_dataset(ds,case):
     tracer_info = trace_gas_tracers(case)
+    dso = ds.copy()
     for v in ds.variables:
         if v in tracer_info:
-            ds[v] = tracer_info[v]['convert'](ds[v])
-            ds[v].attrs['units'] = tracer_info[v]['units']
-            ds[v].attrs['long_name'] = tracer_info[v]['long_name']
+            dso[v] = tracer_info[v]['convert'](ds[v])
+            dso[v].attrs['units'] = tracer_info[v]['units']
+            dso[v].attrs['long_name'] = tracer_info[v]['long_name']
 
-    return ds
+    return dso
 
 #-------------------------------------------------------------------------------
-#--- TEST
+#--- PREPROCESS
 #-------------------------------------------------------------------------------
 if __name__ == '__main__':
 
-    case = 'bgeos5.B20TRC5CN.f09_g16.BPRD_orcas_sci.004'
-    tracer_def = trace_gas_tracers(case)
+    from workflow import chunktime as ct
+    from workflow import task_manager as tm
+    from workflow.argpass import picklepass
 
-    for t,v in tracer_def.items():
-        print '%s, %s, %s'%(t,v['long_name'],v['units'])
+    clobber = False
+
+    case = 'bgeos5.B20TRC5CN.f09_g16.BPRD_orcas_sci.004'
+    component = 'atm'
+    stream = 'cam.h0'
+    case_def = case_definitions[case]
+
+    chunk_size = 100
+
+    #---------------------------------------------------------------------------
+    #-- add derived variables
+    #---------------------------------------------------------------------------
+
+    diri = os.path.join(case_def['droot'],component,'proc/tseries/daily')
+    diro = diri
+
+    fi = os.path.join(diri,'.'.join([case,stream,'{varname}',case_def['datestr'],'nc']))
+    fo = os.path.join(diro,'.'.join([case,stream,'{varname}',case_def['datestr'],'nc']))
+
+    script = os.path.abspath('./transform_dataset.py')
+
+    derived_vars = {'theta' : {'file_in' : [fi.format(varname='T'), fi.format(varname='PS')],
+                               'func' : 'compute_potential_temperature'},
+                    'Pm' :  {'file_in' : [fi.format(varname='PS')],
+                             'func' : 'compute_potential_temperature'}
+                    }
+
+    for vnew,specs in derived_vars.items():
+
+        control = {'file_in':specs['file_in'],
+                   'file_out':fo.format(varname=vnew),
+                   'function':specs['func']}
+
+        #jid = tm.submit([script,picklepass(control)],
+        #                memory='50GB')
+
+        jid = ct.apply(script=script,
+                       kwargs = control,
+                       chunk_size = chunk_size,
+                       clobber=clobber,
+                       cleanup=True,
+                       submit_kwargs_i={'memory':'60GB','constraint':'geyser'},
+                       submit_kwargs_cat={'memory':'100GB'})
+    tm.wait()
+    exit()
+
+    #---------------------------------------------------------------------------
+    #-- remap to new vertical coordinate
+    #---------------------------------------------------------------------------
+
+    diro = os.path.join(case_def['droot'],component,'proc/tseries/daily_z3')
+    if not os.path.exists(diro):
+        call(['mkdir','-p',diro])
+
+    fi = os.path.join(diri,'.'.join([case,stream,'{varname}',case_def['datestr'],'nc']))
+    fo = os.path.join(diro,'.'.join([case,stream,'{varname}',case_def['datestr'],'nc']))
+
+    file_in_z3 = fi.format(varname='Z3')
+
+    variables = ['Z3','Q','U','V']+[k for k in trace_gas_tracers(case)]
+
+    script = os.path.abspath('./calc_remap_vertical_coord.py')
+
+    for v in variables:
+        file_in = fi.format(varname=v)
+        file_out = fo.format(varname=v)
+
+        control = {'file_in':file_in,
+                   'file_out':file_out,
+                   'file_in_vertical_coord':file_in_z3,
+                   'remap_variables':[v],
+                   'coord_field_name':'Z3'}
+
+        jid = ct.apply(script=script,
+                       kwargs = control,
+                       chunk_size = chunk_size,
+                       clobber=clobber,
+                       cleanup=True,
+                       submit_kwargs_i={'memory':'100GB','constraint':'geyser'},
+                       submit_kwargs_cat={'memory':'300GB'})
+    tm.wait()

@@ -5,11 +5,11 @@ fv = "9.9692099683868690e+36"
 
 begin
 
-  pth = "/glade/p/work/mclong/orcas/fltdata-merge"
+  pth = "/glade/p/work/mclong/orcas/gv_merged_data"
 
-  file_list = (/"ORCASall.merge60"/) ;","ORCASall.mergeTOGA","ORCASall.merge60"/) ;,
+  file_list = (/"ORCASall.merge"/) ;,"ORCASall.merge60","ORCASall.merge10",
 
-  now = systemfunc("date +%Y%m%d")
+  now = "20170526" ;systemfunc("date +%Y%m%d")
 
 ;------------------------------------------------------------------
 ; read metadata file
@@ -33,9 +33,9 @@ begin
   ;; some ammendments
   long_name@Year ="Year"
   units@Year = "Year"
-  
+
   long_name@flt = "Flight number"
-  
+
   long_name@DOY = "Day of year"
   units@DOY = "days"
 
@@ -109,7 +109,7 @@ begin
 
       strdata := asciiread(file_in,-1,"string")
       nrow = dimsizes(strdata)-1
-      
+
       strarrary := new(ncol,string)
       data := new((/nrow,ncol/),double)
       do i = 1,dimsizes(strdata)-1
@@ -125,18 +125,18 @@ begin
       system("rm -f " + file_out)
       fo = addfile(file_out, "c")
       modified = systemfunc("stat -c '%y' "+file_in)
-      
+
       fAtt = True
       fAtt@source =  "converted from "+file_in+" on "+systemfunc("date")
       fAtt@source_timestamp = "source file was last modified: "+modified
       fileattdef(fo,fAtt)
- 
+
       filedimdef(fo,"time",nrow,True)
       filevardef(fo,"time","double","time")
       do j = 0,ncol-1
           filevardef(fo,col(j),"double","time")
       end do
-      
+
       ;;------------------------------------------------------------------
       ;; write data to file
       ;;------------------------------------------------------------------
@@ -147,7 +147,7 @@ begin
           else
               print("units@"+col(j)+" = ?")
           end if
-          
+
           if isatt(long_name,col(j))
               fo->$col(j)$@long_name = long_name@$col(j)$
           else
@@ -159,9 +159,9 @@ begin
       time@units = "seconds since 2016-01-01 00:00"
       time@calendar = "gregorian"
       time!0 = "time"
-      
+
       time := cd_convert(time,"days since 2016-01-01 00:00")
-      
+
       fo->time = (/time/)
       att = getvaratts(time)
       do i = 0,dimsizes(att)-1

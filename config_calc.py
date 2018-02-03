@@ -4,6 +4,7 @@ import sys
 from glob import glob
 from subprocess import call
 import socket
+import re
 
 #-- analysis
 from datetime import datetime
@@ -22,7 +23,7 @@ for p in path_tools:
 calc_name = 'orcas'
 
 hostname = socket.gethostname()
-if any(s in hostname for s in ['cheyenne','yslogin','geyser','caldera','pronghorn']):
+if any(s in hostname for s in ['cheyenne','geyser','caldera','pronghorn']) or re.match('r.{5}',hostname):
     scratch = '/glade/scratch/'+os.environ['USER']
     dataroot = '/glade/p/work/'+os.environ['USER']
     dataout = '/glade/p/eol/stephens/longcoll/mclong_calcs'
@@ -31,7 +32,7 @@ elif hostname == 'alpenhorn':
     dataroot = '/Users/mclong/data'
     dataout = os.path.join('/Users/mclong/data/calcs',calc_name)
 else:
-    print('hostname not found')
+    print('hostname not found: '+hostname)
 
 #-- directories
 diro = {}
