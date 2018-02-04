@@ -3,8 +3,9 @@ import os
 from subprocess import call
 import numpy as np
 import xarray as xr
+from config_calc import dataroot
 
-fltdata = '/glade/p/work/mclong/orcas/gv_merged_data'
+fltdata = os.path.join(dataroot,'orcas/gv_merged_data')
 datestr = '20170526'
 freq = 10
 
