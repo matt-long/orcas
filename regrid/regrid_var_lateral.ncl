@@ -26,6 +26,7 @@ begin
       layer_out_ones = ESMF_regrid_with_weights(layer_in_ones, wgtFile, regrid_opt)
       layer_out_ones = where(layer_out_ones .gt. 0.0, layer_out_ones, layer_out_ones@_FillValue)
       layer_out = layer_out / layer_out_ones
+      layer_out = where(layer_out_ones .gt. 0.0, layer_out, layer_out@_FillValue)
    end if
 
    return(layer_out)

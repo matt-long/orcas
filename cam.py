@@ -47,7 +47,7 @@ def potential_temperature(pressure,temperature,return_type='DataArray'):
 #--- FUNCTION
 #-------------------------------------------------------------------------------
 
-def pres_hybrid(ds,layer_center=True,layer_interface=False):
+def pres_hybrid(dsi,layer_center=True,layer_interface=False):
     '''Calculate pressure at the hybrid levels.
 
     Parameters
@@ -60,6 +60,9 @@ def pres_hybrid(ds,layer_center=True,layer_interface=False):
     cell_interface : logical,optional,default = False
        compute pressure on cell interfaces
     '''
+
+    ds = dsi.copy()
+
     if not layer_center and not layer_interface:
         return ds
 
@@ -69,7 +72,8 @@ def pres_hybrid(ds,layer_center=True,layer_interface=False):
         esm.require_variables(ds,['P0','PS',hya,hyb])
         ds['Pm'] = (ds.P0 * ds[hya] + ds.PS * ds[hyb]) * 0.01 # kg m/m^2/s^2 = Pa,*0.01 convert to hPa
         if 'time' in ds.Pm.dims:
-            ds['Pm'] = ds.Pm.transpose('time','lev','lat','lon')
+            newdims = (ds.Pm.dims[ds.Pm.dims.index('time')],)+tuple(d for d in ds.Pm.dims if d != 'time')
+            ds['Pm'] = ds.Pm.transpose(*newdims)
 
         ds['Pm'].attrs['long_name'] = 'Pressure (layer center)'
         ds['Pm'].attrs['units'] = 'hPa'
@@ -79,7 +83,8 @@ def pres_hybrid(ds,layer_center=True,layer_interface=False):
         esm.require_variables(ds,['P0','PS',hya,hyb])
         ds['Pi'] = (ds.P0 * ds[hya] + ds.PS * ds[hyb]) * 0.01 # kg m/m^2/s^2 = Pa
         if 'time' in ds.Pm.dims:
-            ds['Pi'] = ds.Pi.transpose('time','ilev','lat','lon')
+            newdims = (ds.Pm.dims[ds.Pm.dims.index('time')],)+tuple(d for d in ds.Pm.dims if d != 'time')
+            ds['Pi'] = ds.Pi.transpose(*newdims)
 
         ds['Pi'].attrs['long_name'] = 'Pressure (interface)'
         ds['Pi'].attrs['units'] = 'hPa'
@@ -130,7 +135,10 @@ def remap_vertical_coord(coord_field,*variables,**kwargs):
                    1434.59033203,1290.03381348,1147.62548828,
                    1007.2913208,868.96289062,732.5602417,
                    598.00524902,465.22851562,334.16360474,
-                   204.7640686,77.2164535]),dims=('lev'))
+                   204.7640686,77.2164535]),
+        dims=('zlev'),
+        attrs={'long_name':'Geopotential height (above sea level)',
+               'units':'m'})
 
     pressure_levels = xr.DataArray(
         np.array([50.,100.,150.,200.,250.,290.,330.,370.,
@@ -140,7 +148,11 @@ def remap_vertical_coord(coord_field,*variables,**kwargs):
                   780.,790.,800.,810.,820.,830.,840.,850.,
                   860.,870.,880.,890.,900.,910.,920.,930.,
                   940.,950.,960.,970.,980.,990.,1000.,1005.,
-                  1010.,1015.,1020.]),dims=('lev'))
+                  1010.,1015.,1020.]),
+          dims=('plev'),
+          attrs={'long_name':'Pressure',
+                 'units':'hPa'})
+
 
     #-- parse arguments
     if coord_field.name == 'Z3':
@@ -149,9 +161,6 @@ def remap_vertical_coord(coord_field,*variables,**kwargs):
     else:
         new_levels = kwargs.pop('new_levels',pressure_levels)
         levdim = u'plev'
-
-    if len(new_levels) != len(coord_field.lev):
-        raise ValueError('new_levels is required to have some number of levels as lev')
 
     method = kwargs.pop('method','log')
     if method not in ['linear','log']:
@@ -175,6 +184,10 @@ def remap_vertical_coord(coord_field,*variables,**kwargs):
         dims_out = (u'time',levdim)
         interp_axis = 1
 
+    elif dims_in == (u'time',u'lev',u'lat'):
+        dims_out = (u'time',levdim,u'lat')
+        interp_axis = 1
+
     else:
         raise ValueError('Bad dimensions for intepolation: {0}'.format(str(dims_in)))
 
@@ -183,26 +196,32 @@ def remap_vertical_coord(coord_field,*variables,**kwargs):
         raise ValueError('All arrays must have the same dims')
 
     #-- loop over vars and interpolate
-    data_on_plev = {}
+    data_on_new_lev = {}
     coords = {}
     for da in variables:
-        print('interpolating '+da.name)
         if 'lev' not in da.dims: continue
-
-        data_on_plev[da.name] = xr.apply_ufunc(interp_func,new_levels,
-                                               coord_field,da,
-                                               kwargs={'axis':interp_axis},
-                                               dask='parallelized',
-                                               output_dtypes=[np.float32])
-        data_on_plev[da.name] = data_on_plev[da.name].rename({'lev':levdim})
-        #data_on_plev[da.name] = data_on_plev[da.name].transpose(*dims_out)
+        print('interpolating '+da.name)
+        data_on_new_lev[da.name] = xr.DataArray(interp_func(new_levels.values,
+                                                            coord_field.values,
+                                                            da.values,
+                                                            axis=interp_axis),
+                                                dims=dims_out,
+                                                attrs=da.attrs)
 
     #-- put back variables that don't have a level dimension to interpolate
-    data_on_plev.update({da.name:da for da in variables if 'lev' not in da.dims})
-    dso = xr.Dataset(data_vars=data_on_plev)#,coords=coords)
-    #print data_on_plev[da.name]
-    dso[levdim].values = new_levels.values
-    #data_on_plev[da.name][levdim] = new_levels
+    data_on_new_lev.update({da.name:da for da in variables if 'lev' not in da.dims})
+
+    #-- get coordinates
+    coords = {c:variables[0][c] for c in variables[0].coords if c != 'lev'}
+    coords[levdim] = new_levels
+
+    dso = xr.Dataset(data_vars=data_on_new_lev,coords=coords)
+
+    #-- for some reason, the atttributs of the coordinate are not available
+    for c in coords.keys():
+        if c == levdim: continue
+        dso[c].attrs = variables[0][c].attrs
+
     return dso
 
 #-------------------------------------------------------------------------------
@@ -345,13 +364,17 @@ def interp_within_column(points_z,model_z,*model_var_columns,**kwargs):
 #--- FUNCTION
 #-------------------------------------------------------------------------------
 
-def regional_mean(ds,rmask,**kwargs):
+def so_ocean_mean(ds,varlist):
+    import grid_tools
     area = grid_tools.compute_grid_area(ds.lon.values,ds.lat.values)
-
+    landfrac = xr.open_dataset('/glade/p/work/mclong/grids/f09_f09.nc')['LANDFRAC'].isel(time=0)
+    rmask = landfrac.where(landfrac<0.9).fillna(0.).where(landfrac>=0.9).fillna(1.).where(landfrac.lat<-44.).fillna(0.)
     wgt = rmask * area
-    wgt = wgt/wgt.sum()
     wgt = wgt.compute()
-
-    ravg = (ds * wgt).sum(dim=['lat','lon'])
+    ravg = xr.Dataset()
+    for v in varlist:
+        ravg[v] = (ds[v] * wgt).sum(dim=['lat','lon']) / wgt.where(ds[v].notnull()).sum(dim=['lat','lon'])
+        ravg[v].attrs = ds[v].attrs
+    ravg.time.attrs = ds.time.attrs
 
     return ravg

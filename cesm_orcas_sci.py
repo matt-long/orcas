@@ -382,7 +382,6 @@ if __name__ == '__main__':
                        submit_kwargs_i={'memory':'60GB','constraint':'geyser'},
                        submit_kwargs_cat={'memory':'100GB'})
     tm.wait()
-    exit()
 
     #---------------------------------------------------------------------------
     #-- remap to new vertical coordinate
@@ -418,4 +417,77 @@ if __name__ == '__main__':
                        cleanup=True,
                        submit_kwargs_i={'memory':'100GB','constraint':'geyser'},
                        submit_kwargs_cat={'memory':'300GB'})
+    tm.wait()
+
+    #---------------------------------------------------------------------------
+    #-- transform: regional mean
+    #---------------------------------------------------------------------------
+
+    diri = os.path.join(case_def['droot'],component,'proc/tseries/daily')
+    diri_z3 = os.path.join(case_def['droot'],component,'proc/tseries/daily_z3')
+
+    diro = os.path.join(case_def['droot'],component,'proc/tseries/daily_so_ocean_mean')
+    if not os.path.exists(diro):
+        call(['mkdir','-p',diro])
+
+    fiz3 = os.path.join(diri_z3,'.'.join([case,stream,'{varname}',case_def['datestr'],'nc']))
+    fi = os.path.join(diri,'.'.join([case,stream,'{varname}',case_def['datestr'],'nc']))
+    fo = os.path.join(diro,'.'.join([case,stream,'{varname}',case_def['datestr'],'nc']))
+
+    script = os.path.abspath('./transform_dataset.py')
+
+    variables = ['Z3','Q','U','V','Pm','theta']+[k for k in trace_gas_tracers(case)]
+    variables += ['SF'+k for k in trace_gas_tracers(case) if 'IDL' not in k]
+
+    for v in variables:
+        if 'SF' in v:
+            file_in = fi.format(varname=v)
+        else:
+            file_in = fiz3.format(varname=v)
+
+        file_out = fo.format(varname=v)
+
+        control = {'file_in':file_in,
+                   'file_out':file_out,
+                   'function':'so_ocean_mean',
+                   'kwargs' : {'varlist':[v]}}
+        jid = ct.apply(script=script,
+                       kwargs = control,
+                       chunk_size = chunk_size,
+                       clobber=clobber,
+                       cleanup=True,
+                       submit_kwargs_i={'memory':'60GB','constraint':'geyser'},
+                       submit_kwargs_cat={'memory':'100GB'})
+    tm.wait()
+
+    #---------------------------------------------------------------------------
+    #-- transform: 80W
+    #---------------------------------------------------------------------------
+
+    diri = os.path.join(case_def['droot'],component,'proc/tseries/daily')
+    diro = os.path.join(case_def['droot'],component,'proc/tseries/daily_80W')
+    if not os.path.exists(diro):
+        call(['mkdir','-p',diro])
+
+    fi = os.path.join(diri,'.'.join([case,stream,'{varname}',case_def['datestr'],'nc']))
+    fo = os.path.join(diro,'.'.join([case,stream,'{varname}',case_def['datestr'],'nc']))
+
+    script = os.path.abspath('./transform_dataset.py')
+
+    variables = ['Z3','Q','U','V','Pm','theta']+[k for k in trace_gas_tracers(case)]
+    for v in variables:
+        file_in = fi.format(varname=v)
+        file_out = fo.format(varname=v)
+
+        control = {'file_in':file_in,
+                   'file_out':file_out,
+                   'function':'80W'}
+
+        jid = ct.apply(script=script,
+                       kwargs = control,
+                       chunk_size = chunk_size,
+                       clobber=clobber,
+                       cleanup=True,
+                       submit_kwargs_i={'memory':'60GB','constraint':'geyser'},
+                       submit_kwargs_cat={'memory':'100GB'})
     tm.wait()

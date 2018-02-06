@@ -243,6 +243,9 @@ begin
          print("postfill_opt = "+opt@postfill_opt+" only supported for dst_grid_type=POP")
          status_exit(1)
       end if
+   else if (opt@postfill_opt .eq. "zeros") then
+     var_out = where(ismissing(var_out),0.,var_out)
+   end if
    end if
 
    if (dst_grid_type .eq. "rectilinear") then

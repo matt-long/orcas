@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 from config_calc import *
+import grid_tools
 
 dout = os.path.join(diro['out'],'flux_products')
 
@@ -94,7 +95,7 @@ if __name__ == '__main__':
 
     interp_method = 'conserve'
     prefill_opt = 'zeros'
-    postfill_opt = 'none'
+    postfill_opt = 'zeros'
 
     #-- compute weight files
     for src in src_grids:
@@ -158,3 +159,9 @@ if __name__ == '__main__':
                                        prefill_opt = prefill_opt,
                                        outfile_opt = outfile_opt)
                 outfile_opt = 'append'
+
+            #-- overwrite the area field
+            with xr.open_dataset(file_out) as ds:
+                ds.load()
+            ds.area.values = grid_tools.compute_grid_area(ds.lon.values,ds.lat.values)
+            ds.to_netcdf(file_out)

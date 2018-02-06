@@ -119,9 +119,16 @@ def remap_vertical_coord(coord_field,*variables,**kwargs):
 
     #-- get coordinates
     coords = {c:variables[0][c] for c in variables[0].coords if c != 'lev'}
-    coords['plev'] = new_levels
+    coords[levdim] = new_levels
 
-    return xr.Dataset(data_vars= data_on_new_lev,coords=coords)
+    dso = xr.Dataset(data_vars=data_on_new_lev,coords=coords)
+
+    #-- for some reason, the atttributs of the coordinate are not available
+    for c in coords.keys():
+        if c == levdim: continue
+        dso[c].attrs = variables[0][c].attrs
+
+    return dso
 
 
 if __name__ == '__main__':
