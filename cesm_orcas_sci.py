@@ -396,7 +396,7 @@ if __name__ == '__main__':
 
     file_in_z3 = fi.format(varname='Z3')
 
-    variables = ['Z3','Q','U','V']+[k for k in trace_gas_tracers(case)]
+    variables = ['Z3','Q','U','V','Pm','theta']+[k for k in trace_gas_tracers(case)]
 
     script = os.path.abspath('./calc_remap_vertical_coord.py')
 
