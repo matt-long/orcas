@@ -372,6 +372,7 @@ def so_ocean_mean(ds,varlist):
     wgt = rmask * area
     wgt = wgt.compute()
     ravg = xr.Dataset()
+
     for v in varlist:
         ravg[v] = (ds[v] * wgt).sum(dim=['lat','lon']) / wgt.where(ds[v].notnull()).sum(dim=['lat','lon'])
         ravg[v].attrs = ds[v].attrs

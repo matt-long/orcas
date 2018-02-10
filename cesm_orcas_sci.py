@@ -28,6 +28,7 @@ for case in case_definitions.keys():
 #------------------------------------------------------------
 def convert_units(species,offset,units):
     convert = lambda x: x
+
     if species == 'O2':
         norm_by_chi = 1. / 0.2095
     else:
@@ -321,11 +322,23 @@ def open_casedata(case,component,stream,variables,
 def convert_dataset(ds,case):
     tracer_info = trace_gas_tracers(case)
     dso = ds.copy()
+
     for v in ds.variables:
+
         if v in tracer_info:
             dso[v] = tracer_info[v]['convert'](ds[v])
             dso[v].attrs['units'] = tracer_info[v]['units']
             dso[v].attrs['long_name'] = tracer_info[v]['long_name']
+
+        elif 'SFCO2' in v and ds[v].attrs['units'] == 'kg/m2/s':
+            dso[v] = ds[v] * 1000. / 44. * 86400. * 365.
+            dso[v].attrs['units'] = 'mol m$^{-2}$ yr$^{-1}$'
+            dso[v].attrs['long_name'] = v+' surface flux'
+
+        elif 'SFO2' in v and ds[v].attrs['units'] == 'kg/m2/s':
+            dso[v] = ds[v] * 1000. / 32. * 86400. * 365.
+            dso[v].attrs['units'] = 'mol m$^{-2}$ yr$^{-1}$'
+            dso[v].attrs['long_name'] = v+' surface flux'
 
     return dso
 
