@@ -356,7 +356,7 @@ if __name__ == '__main__':
 
     clobber = False
 
-    case = 'bgeos5.B20TRC5CN.f09_g16.BPRD_orcas_sci.004'
+    case = 'bgeos5.B20TRC5CN.f09_g16.BPRD_orcas_sci.004a'
     component = 'atm'
     stream = 'cam.h0'
     case_def = case_definitions[case]
@@ -378,7 +378,7 @@ if __name__ == '__main__':
     derived_vars = {'theta' : {'file_in' : [fi.format(varname='T'), fi.format(varname='PS')],
                                'func' : 'compute_potential_temperature'},
                     'Pm' :  {'file_in' : [fi.format(varname='PS')],
-                             'func' : 'compute_potential_temperature'}
+                             'func' : 'compute_pressure'}
                     }
 
     for vnew,specs in derived_vars.items():
