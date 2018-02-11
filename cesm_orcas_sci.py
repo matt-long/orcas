@@ -19,6 +19,8 @@ case_definitions = {
     'b13.B20TRC5CN.f09_g16.BPRD_orcas_sci.001' : {'mdl_name':'b13',
                                                   'datestr' : '20070101-20160229'},
     'bgeos5.B20TRC5CN.f09_g16.BPRD_orcas_sci.004' : {'mdl_name':'b13geos5',
+                                                     'datestr' : '20070101-20160229'},
+    'bgeos5.B20TRC5CN.f09_g16.BPRD_orcas_sci.004a' : {'mdl_name':'b13geos5',
                                                      'datestr' : '20070101-20160229'}}
 for case in case_definitions.keys():
     case_definitions[case]['droot'] = os.path.join('/glade/p/eol/stephens/longcoll/hpss-mirror',case)
@@ -141,6 +143,7 @@ def trace_gas_tracers(case):
     #--- case
     #------------------------------------------------------------
     elif case in ['bgeos5.B20TRC5CN.f09_g16.BPRD_orcas_sci.004',
+                  'bgeos5.B20TRC5CN.f09_g16.BPRD_orcas_sci.004a',
                   'bmerra.B20TRC5CN.f09_g16.BPRD_orcas_sci.001']:
         ''' round two of ORCAS science cases.
         '''
@@ -280,8 +283,7 @@ def trace_gas_tracers(case):
             tracers = cpl_emis.copy()
 
     else:
-        print('ERROR\n'+__file__+': unknown case')
-        exit(1)
+        raise ValueError('Unknown case: {0}'.format(case))
 
     for tracer,info in tracers.items():
         tracers[tracer]['convert'],tracers[tracer]['units'] = \
