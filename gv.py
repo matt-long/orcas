@@ -25,6 +25,61 @@ flight_groups = {'ORCASrf01-rf19' : [flight.index('ORCASrf01'),flight.index('ORC
 non_research_flights = ['tf01', 'tf02', 'ff01', 'ff02','ff03' ]
 
 
+
+#-------------------------------------------------------------------------------
+#-- function
+#-------------------------------------------------------------------------------
+
+def region_quality_mask(x,y,z,
+                        lat_rgn = [-90.,-44],
+                        lon_rgn = [-180.,180.],
+                        named_points = {
+                            'SCCI' : [-53.01062,-70.85168,42],
+                            'SCAR' : [-18.3483,-70.3386, 167],
+                            'SCTE' : [-41.438611, -73.0939, 294],
+                            'SCVD' : [-39.649722,-73.086111,59]}):
+
+    from earth_geometry import points_in_range
+
+    airport_lon = np.array([v[1] for v in named_points.values()])
+    airport_lat = np.array([v[0] for v in named_points.values()])
+
+    #-- land_mask = within 10km of airport and below 4 km
+    land_mask = ~( (points_in_range(airport_lon,airport_lat,x,y,10.)) & (z < 4.) )
+
+    #-- region_mask
+    region_mask = ( (lat_rgn[0] <= y) & (y <= lat_rgn[1]) & (lon_rgn[0] <= x) & (x <= lon_rgn[1]) )
+
+    return ( land_mask & region_mask )
+
+#-------------------------------------------------------------------------------
+#-- function
+#-------------------------------------------------------------------------------
+
+def open_flightdata(case,mask=True):
+
+    diri = os.path.join(dataroot,'orcas','cesm_flight_data')
+    model_files = [os.path.join(diri,'.'.join([case,os.path.basename(f)]))
+                  for f in flight_file]
+
+    obs = xr.open_mfdataset(flight_file)
+    mdl = xr.open_mfdataset(model_files)
+
+    obs['GGALT'] = obs.GGALT * 1e-3
+    obs.GGALT.attrs['units'] = 'km'
+    obs = obs.drop(['UTC','DOY'])
+
+    mdl['GGALT'] = obs.GGALT.copy()
+    mdl['GGLAT'] = obs.GGLAT.copy()
+    mdl['GGLON'] = obs.GGLON.copy()
+    mdl = mdl.drop(['UTC','DOY'])
+
+    if mask:
+        mdl = mdl.where(region_quality_mask(mdl.GGLON.values,mdl.GGLAT.values,mdl.GGALT.values))
+        obs = obs.where(region_quality_mask(obs.GGLON.values,obs.GGLAT.values,obs.GGALT.values))
+
+    return obs,mdl
+
 if __name__ == '__main__':
 
     #---------------------------------------------
