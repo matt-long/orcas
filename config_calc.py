@@ -27,12 +27,14 @@ if any(s in hostname for s in ['cheyenne','geyser','caldera','pronghorn']) or re
     scratch = '/glade/scratch/'+os.environ['USER']
     dataroot = '/glade/p/work/'+os.environ['USER']
     dataout = '/glade/p/eol/stephens/longcoll/mclong_calcs'
+    dataroot2 = '/glade/p/eol/stephens/longcoll'
 elif hostname == 'alpenhorn':
     scratch = '/Users/mclong/scratch'
     dataroot = '/Users/mclong/data'
     dataout = os.path.join('/Users/mclong/data/calcs',calc_name)
+    dataroot2 = '/Users/mclong/data/calcs/orcas'
 else:
-    print('hostname not found: '+hostname)
+    raise ValueError('hostname not found: '+hostname)
 
 #-- directories
 diro = {}

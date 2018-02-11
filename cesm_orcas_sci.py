@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 import os
 from subprocess import call
+from config_calc import dataroot2
 
 #------------------------------------------------------------
 #--- constants
@@ -23,7 +24,7 @@ case_definitions = {
     'bgeos5.B20TRC5CN.f09_g16.BPRD_orcas_sci.004a' : {'mdl_name':'b13geos5',
                                                      'datestr' : '20070101-20160229'}}
 for case in case_definitions.keys():
-    case_definitions[case]['droot'] = os.path.join('/glade/p/eol/stephens/longcoll/hpss-mirror',case)
+    case_definitions[case]['droot'] = os.path.join(dataroot2,'hpss-mirror',case)
 
 #------------------------------------------------------------
 #--- FUNCTION
