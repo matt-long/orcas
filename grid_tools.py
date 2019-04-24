@@ -7,8 +7,13 @@ Tools for grids.
 import xarray as xr
 import numpy as np
 
-Re = 6.37122e6 # m
+Re = 6.37122e6 # m, radius of Earth
 deg2rad = np.pi/180.
+
+
+#------------------------------------------------------------------------
+#-- FUNCTION
+#------------------------------------------------------------------------
 
 def compute_grid_area(longitude,latitude):
     dx = np.diff(longitude)
@@ -46,6 +51,7 @@ def compute_grid_area(longitude,latitude):
 #------------------------------------------------------------------------
 #-- FUNCTION
 #------------------------------------------------------------------------
+
 def generate_latlon_grid(nx,ny,lon0=0.,file_out=''):
     '''
     .. function:: generate_latlon_grid(nx,ny[,file_out=''])

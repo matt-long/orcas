@@ -1,0 +1,5 @@
+
+CondaEnvironmentNotFoundError: Could not find environment: py3 .
+You can list all discoverable environments with `conda info --envs`.
+
+/var/spool/pbs/mom_priv/jobs/8558479.chadmin1.SC: line 21: mpirun: command not found

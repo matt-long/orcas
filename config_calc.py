@@ -1,48 +1,58 @@
 #-- os interaction
 import os
-import sys
-from glob import glob
-from subprocess import call
+from subprocess import check_call
 import socket
 import re
 
-#-- analysis
-from datetime import datetime
-import xarray as xr
-import numpy as np
+def _get_host():
+    """Function to determine which base class to use.
+    """
+    filter1 = r'^cheyenne'
+    filter2 = r'r\d(i)\d(n)\d*'
+    cheyenne_filter = re.compile('|'.join([filter1, filter2]))
+    dav_filter = re.compile(r'^casper')
+    mac_filter = re.compile(r'^alpenhorn')
 
-import xcalendar as xcal
+    hostname = socket.gethostname()
 
-hostname = socket.gethostname()
+    host_on_cheyenne = cheyenne_filter.search(hostname)
+    host_on_dav = dav_filter.search(hostname)
+    host_on_mac = mac_filter.search(hostname)
 
-#-- path additions
-path_tools = ['./easy']
-for p in path_tools:
-    sys.path.insert(0,os.path.abspath(os.path.expanduser(p)))
+    if host_on_cheyenne:
+        return 'cheyenne'
 
+    elif host_on_dav:
+        return 'dav'
+
+    elif host_on_mac:
+        return 'mac'
+    else:
+        raise ValueError('cannot determine host')
+
+USER = os.environ['USER']
 calc_name = 'orcas'
 
-hostname = socket.gethostname()
-if any(s in hostname for s in ['cheyenne','geyser','caldera','pronghorn']) or re.match('r.{5}',hostname):
-    scratch = '/glade/scratch/'+os.environ['USER']
-    dataroot = '/glade/p/work/'+os.environ['USER']
+host = _get_host()
+if host in ['cheyenne', 'dav']:
+    scratch = f'/glade/scratch/{USER}'
+    dataroot = f'/glade/work/{USER}'
     dataout = '/glade/p/eol/stephens/longcoll/mclong_calcs'
-    dataroot2 = '/glade/p/eol/stephens/longcoll'
-elif hostname == 'alpenhorn':
+    dataroot2 = f'/glade/p/eol/stephens/longcoll'
+
+elif host == 'mac':
     scratch = '/Users/mclong/scratch'
     dataroot = '/Users/mclong/data'
-    dataout = os.path.join('/Users/mclong/data/calcs',calc_name)
+    dataout = f'/Users/mclong/data/calcs/{calc_name}'
     dataroot2 = '/Users/mclong/data/calcs/orcas'
-else:
-    raise ValueError('hostname not found: '+hostname)
 
 #-- directories
 diro = {}
-diro['work'] = os.path.join(scratch,'calcs',calc_name)
+diro['work'] = f'{scratch}/calcs/{calc_name}'
 diro['out'] = dataout
-diro['fig'] =  'fig'
+diro['fig'] = 'fig'
 diro['log'] = 'logs'
 
 for pth in diro.values():
     if not os.path.exists(pth):
-        call(['mkdir','-p',pth])
+        check_call(['mkdir','-p',pth])

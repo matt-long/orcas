@@ -18,17 +18,17 @@ def qualitative10():
 
 def qualitative8y():
     hexstr = '#e41a1c\n#377eb8\n#4daf4a\n#984ea3\n#ff7f00\n#ffff33\n#a65628\n#f781bf'
-    
+
     hexcolor = [s.strip() for s in hexstr.split('\n')]
     return hexcolor
 
 def qualitative8():
     hexstr = '#e41a1c\n#377eb8\n#4daf4a\n#984ea3\n#ff7f00\n#a65628\n#f781bf\n#999999'
-    
+
     hexcolor = [s.strip() for s in hexstr.split('\n')]
     return hexcolor
 
-def singlehue(color):   
+def singlehue(color):
     if color == 'blue':
         hexstr = '''#deebf7
                  #c6dbef
@@ -86,10 +86,10 @@ def singlehue(color):
     else:
         print('color "%s" not known.'%color)
         exit(1)
-        
+
     hexcolor = [s.strip() for s in hexstr.split('\n')]
     return hexcolor[::-1]
 
 if __name__ == '__main__':
-    print singlehue('red')
-    print qualitative8y()
+    print(singlehue('red'))
+    print(qualitative8y())

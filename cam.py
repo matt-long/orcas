@@ -2,7 +2,6 @@
 import os
 import numpy as np
 import xarray as xr
-import esm_tools as esm
 
 na = np.newaxis
 
@@ -12,6 +11,17 @@ mwair = 28.966
 re   = 6.37122e06;         # m
 deg2rad  = np.pi / 180.0;  # degree/radian
 con  = re * deg2rad;       # m
+
+
+def require_variables(ds,req_var):
+    missing_var_error = False
+    for v in req_var:
+        if v not in ds:
+            print('ERROR: Missing required variable: %s'%v)
+            missing_var_error = True
+    if missing_var_error:
+        raise ValueError('missing variables')
+
 
 #-------------------------------------------------------------------------------
 #--- FUNCTION
@@ -69,7 +79,7 @@ def pres_hybrid(dsi,layer_center=True,layer_interface=False):
     if layer_center:
         hya = 'hyam'
         hyb = 'hybm'
-        esm.require_variables(ds,['P0','PS',hya,hyb])
+        require_variables(ds,['P0','PS',hya,hyb])
         ds['Pm'] = (ds.P0 * ds[hya] + ds.PS * ds[hyb]) * 0.01 # kg m/m^2/s^2 = Pa,*0.01 convert to hPa
         if 'time' in ds.Pm.dims:
             newdims = (ds.Pm.dims[ds.Pm.dims.index('time')],)+tuple(d for d in ds.Pm.dims if d != 'time')
@@ -77,13 +87,14 @@ def pres_hybrid(dsi,layer_center=True,layer_interface=False):
 
         ds['Pm'].attrs['long_name'] = 'Pressure (layer center)'
         ds['Pm'].attrs['units'] = 'hPa'
+
     if layer_interface:
         hya = 'hyai'
         hyb = 'hybi'
-        esm.require_variables(ds,['P0','PS',hya,hyb])
+        require_variables(ds,['P0','PS',hya,hyb])
         ds['Pi'] = (ds.P0 * ds[hya] + ds.PS * ds[hyb]) * 0.01 # kg m/m^2/s^2 = Pa
-        if 'time' in ds.Pm.dims:
-            newdims = (ds.Pm.dims[ds.Pm.dims.index('time')],)+tuple(d for d in ds.Pm.dims if d != 'time')
+        if 'time' in ds.Pi.dims:
+            newdims = (ds.Pi.dims[ds.Pi.dims.index('time')],)+tuple(d for d in ds.Pi.dims if d != 'time')
             ds['Pi'] = ds.Pi.transpose(*newdims)
 
         ds['Pi'].attrs['long_name'] = 'Pressure (interface)'
@@ -364,10 +375,10 @@ def interp_within_column(points_z,model_z,*model_var_columns,**kwargs):
 #--- FUNCTION
 #-------------------------------------------------------------------------------
 
-def so_ocean_mean(ds,varlist):
+def so_ocean_mean(ds, varlist, copy_vars=[]):
     import grid_tools
     area = grid_tools.compute_grid_area(ds.lon.values,ds.lat.values)
-    landfrac = xr.open_dataset('/glade/p/work/mclong/grids/f09_f09.nc')['LANDFRAC'].isel(time=0)
+    landfrac = xr.open_dataset('/glade/work/mclong/grids/f09_f09.nc')['LANDFRAC'].isel(time=0)
     rmask = landfrac.where(landfrac<0.9).fillna(0.).where(landfrac>=0.9).fillna(1.).where(landfrac.lat<-44.).fillna(0.)
     wgt = rmask * area
     wgt = wgt.compute()
@@ -377,5 +388,9 @@ def so_ocean_mean(ds,varlist):
         ravg[v] = (ds[v] * wgt).sum(dim=['lat','lon']) / wgt.where(ds[v].notnull()).sum(dim=['lat','lon'])
         ravg[v].attrs = ds[v].attrs
     ravg.time.attrs = ds.time.attrs
+    
+    if copy_vars:
+        for v in copy_vars:
+            ravg[v] = ds[v]
 
     return ravg

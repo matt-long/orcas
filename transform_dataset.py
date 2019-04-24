@@ -36,12 +36,50 @@ if func_str == 'compute_potential_temperature':
     import cam
     func = lambda ds: cam.potential_temperature(cam.pres_hybrid(ds)['Pm'],
                                                 ds['T'],return_type='Dataset')
-elif func_str == 'compute_pressure':
+elif func_str == 'compute_layer_pressure':
     import cam
-    func = cam.pres_hybrid
+    func = lambda ds: cam.pres_hybrid(ds,layer_center=True,layer_interface=False)
+
+elif func_str == 'compute_interface_pressure':
+    import cam
+    func = lambda ds: cam.pres_hybrid(ds,layer_center=False,layer_interface=True)
 
 elif func_str == '80W':
     func = lambda ds: ds.sel(lon=-80.+360.,lat=slice(-90,-30))
+
+elif func_str == '170E':
+    func = lambda ds: ds.sel(lon=170.,lat=slice(-90,-30))
+
+elif func_str == 'scargo_profiles':
+    def func(ds):
+        import cam
+        import numpy as np
+        waypoints = {'Christchurch':[172.+32./60.,-43+29./60.,],
+                     '170E,60S' :[170.,-60.],
+                     '170E,65S' :[170.,-65.],
+                     '170E,70S' :[170.,-70.],
+                     'McMurdo' : [166+28./60.,-77+51/60.],
+                     'Beardmore' : [164+23./60.,-84.],
+                     'South Pole': [139+16/60.,-90.]}
+
+        profile  = [n for n in waypoints.keys()]
+        lon = np.array([])
+        lat = np.array([])
+        for n in profile:
+            lonlat = waypoints[n]
+            lon = np.concatenate((lon[:],[lonlat[0]]))
+            lat = np.concatenate((lat[:],[lonlat[1]]))
+        lon = xr.DataArray(lon,dims=('profile'),coords={'profile':profile})
+        lat = xr.DataArray(lat,dims=('profile'),coords={'profile':profile})
+
+        dss = []
+        for l in range(len(ds.time)):
+            var = [ds[v].isel(time=l) for v in ds.variables if 'lat' in ds[v].dims and 'lon' in ds[v].dims]
+            dss.append(cam.interp_columns_esmf(lon,lat,ds.lon,ds.lat,*var))
+        dss = xr.concat(dss,dim='time')
+        dss['time'] = ds.time
+        return dss
+
 
 elif func_str == 'so_ocean_mean':
     import cam
@@ -67,17 +105,20 @@ if isel:
 print('-'*80)
 print('Input dataset')
 ds.info()
-print
+print()
 
 #-------------------------------------------------------------------------------
 #-- apply transformation
 #-------------------------------------------------------------------------------
 
 dso = func(ds,**kwargs)
+if ds.time.bounds not in dso.variables:
+    dso[ds.time.bounds] = ds[ds.time.bounds]
+
 print('-'*80)
 print('Output dataset')
 dso.info()
-print
+print()
 
 #-------------------------------------------------------------------------------
 #-- write result

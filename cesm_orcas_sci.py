@@ -3,6 +3,9 @@ import os
 from subprocess import call
 from config_calc import dataroot2
 
+import cftime
+
+
 #------------------------------------------------------------
 #--- constants
 #------------------------------------------------------------
@@ -302,19 +305,29 @@ def open_casedata(case,component,stream,variables,
 
     case_def = case_definitions[case]
     subdir = 'proc/tseries/daily'
+    drop_vars = ['time_written', 'date_written', 'date', 'datesec', 'mdt',
+                 'nbsec', 'nsbase', 'nsteph', 'ntrk', 'ntrm', 'ntrn']
 
     if transformed:
         subdir = subdir+'_'+transformed
 
     ds = {}
     for v in variables:
-        f = os.path.join(case_def['droot'],component,subdir,'.'.join([case,stream,v,case_def['datestr'],'nc']))
-        ds = xr.merge((ds,xr.open_dataset(f,drop_variables=['time_written',
-                                                            'date_written',
-                                                            'date','datesec',
-                                                            'mdt','nbsec','nsbase',
-                                                            'nsteph','ntrk','ntrm',
-                                                            'ntrn'])))
+        f = os.path.join(case_def['droot'], component, subdir,
+                         '.'.join([case,stream,v,case_def['datestr'],'nc']))
+
+        ds = xr.merge((ds, xr.open_dataset(f, decode_times=False, drop_variables=drop_vars, chunks={'time': 5})))
+
+    date = cftime.num2date(ds[ds.time.bounds].mean(dim=ds[ds.time.bounds].dims[-1]),
+                           units=ds.time.units,
+                           calendar=ds.time.calendar,
+                           only_use_cftime_datetimes=True)
+
+    attrs = ds.time.attrs
+    encoding = ds.time.encoding
+    ds['time'] = date #xr.CFTimeIndex(date)
+    ds.time.attrs = attrs
+    ds.time.encoding = encoding
 
     return ds
 
@@ -327,21 +340,29 @@ def convert_dataset(ds,case):
     dso = ds.copy()
 
     for v in ds.variables:
-
+        attrs = ds[v].attrs
         if v in tracer_info:
             dso[v] = tracer_info[v]['convert'](ds[v])
+            dso[v].attrs = attrs
             dso[v].attrs['units'] = tracer_info[v]['units']
             dso[v].attrs['long_name'] = tracer_info[v]['long_name']
 
         elif 'SFCO2' in v and ds[v].attrs['units'] == 'kg/m2/s':
             dso[v] = ds[v] * 1000. / 44. * 86400. * 365.
+            dso[v].attrs = attrs
             dso[v].attrs['units'] = 'mol m$^{-2}$ yr$^{-1}$'
             dso[v].attrs['long_name'] = v+' surface flux'
 
         elif 'SFO2' in v and ds[v].attrs['units'] == 'kg/m2/s':
             dso[v] = ds[v] * 1000. / 32. * 86400. * 365.
+            dso[v].attrs = attrs
             dso[v].attrs['units'] = 'mol m$^{-2}$ yr$^{-1}$'
             dso[v].attrs['long_name'] = v+' surface flux'
+
+        elif 'Pm' in v and ds[v].attrs['units'] == 'Pa':
+            dso[v] = ds[v] / 100.
+            dso[v].attrs = attrs
+            dso[v].attrs['units'] = 'hPa'
 
     return dso
 
@@ -356,7 +377,7 @@ if __name__ == '__main__':
 
     clobber = False
 
-    case = 'bgeos5.B20TRC5CN.f09_g16.BPRD_orcas_sci.004a'
+    case = 'bgeos5.B20TRC5CN.f09_g16.BPRD_orcas_sci.004'
     component = 'atm'
     stream = 'cam.h0'
     case_def = case_definitions[case]
@@ -378,7 +399,9 @@ if __name__ == '__main__':
     derived_vars = {'theta' : {'file_in' : [fi.format(varname='T'), fi.format(varname='PS')],
                                'func' : 'compute_potential_temperature'},
                     'Pm' :  {'file_in' : [fi.format(varname='PS')],
-                             'func' : 'compute_pressure'}
+                             'func' : 'compute_layer_pressure'},
+                    'Pi' :  {'file_in' : [fi.format(varname='PS')],
+                             'func' : 'compute_interface_pressure'}
                     }
 
     for vnew,specs in derived_vars.items():
@@ -395,7 +418,7 @@ if __name__ == '__main__':
                        chunk_size = chunk_size,
                        clobber=clobber,
                        cleanup=True,
-                       submit_kwargs_i={'memory':'60GB','constraint':'geyser'},
+                       submit_kwargs_i={'memory':'60GB'},
                        submit_kwargs_cat={'memory':'100GB'})
     tm.wait()
 
@@ -431,7 +454,43 @@ if __name__ == '__main__':
                        chunk_size = chunk_size,
                        clobber=clobber,
                        cleanup=True,
-                       submit_kwargs_i={'memory':'100GB','constraint':'geyser'},
+                       submit_kwargs_i={'memory':'100GB'},
+                       submit_kwargs_cat={'memory':'300GB'})
+    tm.wait()
+
+    #---------------------------------------------------------------------------
+    #-- remap to new vertical coordinate
+    #---------------------------------------------------------------------------
+
+    diro = os.path.join(case_def['droot'],component,'proc/tseries/daily_theta')
+    if not os.path.exists(diro):
+        call(['mkdir','-p',diro])
+
+    fi = os.path.join(diri,'.'.join([case,stream,'{varname}',case_def['datestr'],'nc']))
+    fo = os.path.join(diro,'.'.join([case,stream,'{varname}',case_def['datestr'],'nc']))
+
+    file_in_theta = fi.format(varname='theta')
+
+    variables = ['Z3','Q','U','V','Pm','theta']+[k for k in trace_gas_tracers(case)]
+
+    script = os.path.abspath('./calc_remap_vertical_coord.py')
+
+    for v in variables:
+        file_in = fi.format(varname=v)
+        file_out = fo.format(varname=v)
+
+        control = {'file_in':file_in,
+                   'file_out':file_out,
+                   'file_in_vertical_coord':file_in_theta,
+                   'remap_variables':[v],
+                   'coord_field_name':'theta'}
+
+        jid = ct.apply(script=script,
+                       kwargs = control,
+                       chunk_size = chunk_size,
+                       clobber=clobber,
+                       cleanup=True,
+                       submit_kwargs_i={'memory':'100GB'},
                        submit_kwargs_cat={'memory':'300GB'})
     tm.wait()
 
@@ -454,9 +513,10 @@ if __name__ == '__main__':
 
     variables = ['Z3','Q','U','V','Pm','theta']+[k for k in trace_gas_tracers(case)]
     variables += ['SF'+k for k in trace_gas_tracers(case) if 'IDL' not in k]
+    variables += ['TM'+k for k in trace_gas_tracers(case) if 'IDL' not in k]
 
     for v in variables:
-        if 'SF' in v:
+        if 'SF' in v or 'TM' in v:
             file_in = fi.format(varname=v)
         else:
             file_in = fiz3.format(varname=v)
@@ -466,13 +526,13 @@ if __name__ == '__main__':
         control = {'file_in':file_in,
                    'file_out':file_out,
                    'function':'so_ocean_mean',
-                   'kwargs' : {'varlist':[v]}}
+                   'kwargs' : {'varlist':[v], 'copy_vars': ['time_bnds']}}
         jid = ct.apply(script=script,
                        kwargs = control,
                        chunk_size = chunk_size,
                        clobber=clobber,
                        cleanup=True,
-                       submit_kwargs_i={'memory':'60GB','constraint':'geyser'},
+                       submit_kwargs_i={'memory':'60GB'},
                        submit_kwargs_cat={'memory':'100GB'})
     tm.wait()
 
@@ -490,7 +550,7 @@ if __name__ == '__main__':
 
     script = os.path.abspath('./transform_dataset.py')
 
-    variables = ['Z3','Q','U','V','Pm','theta']+[k for k in trace_gas_tracers(case)]
+    variables = ['Z3','Q','U','V','Pm','Pi','theta']+[k for k in trace_gas_tracers(case)]
     for v in variables:
         file_in = fi.format(varname=v)
         file_out = fo.format(varname=v)
@@ -504,6 +564,70 @@ if __name__ == '__main__':
                        chunk_size = chunk_size,
                        clobber=clobber,
                        cleanup=True,
-                       submit_kwargs_i={'memory':'60GB','constraint':'geyser'},
+                       submit_kwargs_i={'memory':'60GB'},
+                       submit_kwargs_cat={'memory':'100GB'})
+    tm.wait()
+
+    #---------------------------------------------------------------------------
+    #-- transform: 170E
+    #---------------------------------------------------------------------------
+
+    diri = os.path.join(case_def['droot'],component,'proc/tseries/daily')
+    diro = os.path.join(case_def['droot'],component,'proc/tseries/daily_170E')
+    if not os.path.exists(diro):
+        call(['mkdir','-p',diro])
+
+    fi = os.path.join(diri,'.'.join([case,stream,'{varname}',case_def['datestr'],'nc']))
+    fo = os.path.join(diro,'.'.join([case,stream,'{varname}',case_def['datestr'],'nc']))
+
+    script = os.path.abspath('./transform_dataset.py')
+
+    variables = ['Z3','Q','U','V','Pm','Pi','theta']+[k for k in trace_gas_tracers(case)]
+    for v in variables:
+        file_in = fi.format(varname=v)
+        file_out = fo.format(varname=v)
+
+        control = {'file_in':file_in,
+                   'file_out':file_out,
+                   'function':'170E'}
+
+        jid = ct.apply(script=script,
+                       kwargs = control,
+                       chunk_size = chunk_size,
+                       clobber=clobber,
+                       cleanup=True,
+                       submit_kwargs_i={'memory':'60GB'},
+                       submit_kwargs_cat={'memory':'100GB'})
+    tm.wait()
+
+    #---------------------------------------------------------------------------
+    #-- transform: scargo_profiles
+    #---------------------------------------------------------------------------
+
+    diri = os.path.join(case_def['droot'],component,'proc/tseries/daily')
+    diro = os.path.join(case_def['droot'],component,'proc/tseries/daily_scargo_profiles')
+    if not os.path.exists(diro):
+        call(['mkdir','-p',diro])
+
+    fi = os.path.join(diri,'.'.join([case,stream,'{varname}',case_def['datestr'],'nc']))
+    fo = os.path.join(diro,'.'.join([case,stream,'{varname}',case_def['datestr'],'nc']))
+
+    script = os.path.abspath('./transform_dataset.py')
+
+    variables = ['Z3','Q','U','V','Pm','theta']+[k for k in trace_gas_tracers(case)]
+    for v in variables:
+        file_in = fi.format(varname=v)
+        file_out = fo.format(varname=v)
+
+        control = {'file_in':file_in,
+                   'file_out':file_out,
+                   'function':'scargo_profiles'}
+
+        jid = ct.apply(script=script,
+                       kwargs = control,
+                       chunk_size = chunk_size,
+                       clobber=clobber,
+                       cleanup=True,
+                       submit_kwargs_i={'memory':'60GB'},
                        submit_kwargs_cat={'memory':'100GB'})
     tm.wait()

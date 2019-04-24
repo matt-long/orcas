@@ -186,9 +186,9 @@ def plotgrid(fig,gs,ax,plot_dim,gridspec_kwargs_in={}):
     if all([old == new for old,new in zip(fgsz,[figW_in,figH_in])]):
         return fgsz
 
-    print 'Adjusting fig size:'
-    print '\t(W,H in): %.2f,%.2f --> %.2f,%.2f'%(fgsz[0],fgsz[1],
-                                                 figW_in,figH_in)
+    print('Adjusting fig size:')
+    print('\t(W,H in): %.2f,%.2f --> %.2f,%.2f'%(fgsz[0],fgsz[1],
+                                                 figW_in,figH_in))
     #-- reset figure size
     fig.set_size_inches(figW_in,figH_in)
 

@@ -59,14 +59,29 @@ def remap_vertical_coord(coord_field,*variables,**kwargs):
           attrs={'long_name':'Pressure',
                  'units':'hPa'})
 
+    theta_levels = xr.DataArray(
+        np.concatenate((np.array([1500.,750.,450.,400.]),
+                       np.arange(375.,330.,-5.),
+                       np.arange(330.,300.,-2.),
+                       np.arange(300.,272.,-1),
+                       )),
+          dims=('tlev'),
+          attrs={'long_name':'theta',
+                 'units':'K'})
+
 
     #-- parse arguments
     if coord_field.name == 'Z3':
         new_levels = kwargs.pop('new_levels',geopotential_height_levels)
         levdim = u'zlev'
-    else:
+    elif coord_field.name == 'Pressure':
         new_levels = kwargs.pop('new_levels',pressure_levels)
         levdim = u'plev'
+    elif coord_field.name == 'theta':
+        new_levels = kwargs.pop('new_levels',theta_levels)
+        levdim = u'tlev'
+    else:
+        raise ValueError('Unknown coordinate: {0}'.format(coord_field))
 
     if len(new_levels) != len(coord_field.lev):
         raise ValueError('new_levels is required to have some number of levels as lev')
@@ -173,5 +188,9 @@ if __name__ == '__main__':
         ds = ds.isel(**isel_kwargs)
 
     dso = remap_vertical_coord(coord_field,*[ds[v] for v in remap_variables])
+
+    if ds.time.bounds not in dso.variables:
+        dso[ds.time.bounds] = ds[ds.time.bounds]
+
     print(dso)
     dso.to_netcdf(file_out,unlimited_dims='time')
